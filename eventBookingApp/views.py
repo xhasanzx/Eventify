@@ -1,67 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-import requests, json
+import json
 from django.views.decorators.csrf import csrf_exempt
-from .models import Event, Booking, User
+from .models import Event, Booking, User, Category, Tag
 from django.http import JsonResponse
 
 # Create your views here.
-@csrf_exempt
-def addEvent(request):
-    if request.method != 'POST':
-        return JsonResponse({"error": "POST method required"}, status=400)
-    
-    try:
-        title = request.POST.get('title')
-        description = request.POST.get('description')
-        date = request.POST.get('date')
-        location = request.POST.get('location')
-        price = request.POST.get('price')
-        categories = request.POST.get('categories')
-        tags = request.POST.get('tags')
-        
-        event = Event.objects.create(title=title, description=description, date=date, location=location, price=price)
-        event.categories.set(categories)
-        event.tags.set(tags)
-        return JsonResponse({"message": "Event added successfully"})
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=400)
-
-
-@csrf_exempt
-def editEvent(request, event_id):
-    if request.method != 'POST':
-        return JsonResponse({"error": "POST method required"}, status=400)
-    
-    try:
-        event = Event.objects.get(id=event_id)
-        
-        event.title = request.POST.get('title')
-        event.description = request.POST.get('description')
-        event.date = request.POST.get('date')
-        event.location = request.POST.get('location')
-        event.price = request.POST.get('price')
-        event.categories.set(request.POST.get('categories'))
-        event.tags.set(request.POST.get('tags'))
-        event.save()
-        return JsonResponse({"message": "Event updated successfully"})
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=400)
-    
-
-@csrf_exempt
-def deleteEvent(request, event_id):
-    if request.method != 'POST':
-        return JsonResponse({"error": "POST method required"}, status=400)
-    
-    try:
-        event = Event.objects.get(id=event_id)
-        event.delete()
-        return JsonResponse({"message": "Event deleted successfully"})
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=400)
-
-
 @csrf_exempt
 def login(request):
     if request.method != 'POST':
@@ -127,20 +71,83 @@ def viewAccount(request):
 
 
 @csrf_exempt
-def getEvents(request):
-    if request.method != 'GET':
-        return JsonResponse({"error": "GET method required"}, status=400)
+def addEvent(request):
+    if request.method != 'POST':
+        return JsonResponse({"error": "POST method required"}, status=400)
     
     try:
-        events = Event.objects.all()
-        return JsonResponse(list(events), safe=False)
-    
+        data = json.loads(request.body)
+        title = data.get('title')
+        description = data.get('description')
+        date = data.get('date')
+        location = data.get('location')
+        price = data.get('price')
+        categories = data.get('categories')
+        tags = data.get('tags')
+        
+        event = Event.objects.create(title=title, description=description, date=date, location=location, price=price)
+        for cat_name in categories:
+            category, _ = Category.objects.get_or_create(name=cat_name)
+            event.categories.add(category)
+
+        for tag_name in tags:
+            tag, _ = Tag.objects.get_or_create(name=tag_name)
+            event.tags.add(tag)
+        return JsonResponse({"message": "Event added successfully"})
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
 
 
 @csrf_exempt
-def getEventDetails(request, event_id):
+def editEvent(request):
+    if request.method != 'POST':
+        return JsonResponse({"error": "POST method required"}, status=400)
+    
+    try:
+        data = json.loads(request.body)
+        event_id = data.get('event_id')
+        event = Event.objects.get(id=event_id)
+        
+        event.title = data.get('title')
+        event.description = data.get('description')
+        event.date = data.get('date')
+        event.location = data.get('location')
+        event.price = data.get('price')
+        
+        categories = data.get('categories')
+        tags = data.get('tags')
+        
+        for cat_name in categories:
+            category, _ = Category.objects.get_or_create(name=cat_name)
+            event.categories.add(category)
+
+        for tag_name in tags:
+            tag, _ = Tag.objects.get_or_create(name=tag_name)
+            event.tags.add(tag)
+            
+        event.save()
+        return JsonResponse({"message": "Event updated successfully"})
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+    
+
+@csrf_exempt
+def deleteEvent(request):
+    if request.method != 'DELETE':
+        return JsonResponse({"error": "DELETE method required"}, status=400)
+    
+    try:
+        data = json.loads(request.body)
+        event_id = data.get('event_id')
+        event = Event.objects.get(id=event_id)
+        event.delete()
+        return JsonResponse({"message": "Event deleted successfully"})
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+
+@csrf_exempt
+def getEvent(request):
     if request.method != 'GET':
         return JsonResponse({"error": "GET method required"}, status=400)
     
@@ -152,15 +159,42 @@ def getEventDetails(request, event_id):
             "id": event.id,
             "title": event.title,
             "description": event.description,
-            "date": event.date,
+            "date": str(event.date),
             "location": event.location,
-            "price": event.price,
-            "categories": list(event.categories.values_list('name', flat=True)),
-            "tags": list(event.tags.values_list('name', flat=True))
+            "price": float(event.price),
+            "categories": [cat.name for cat in event.categories.all()],
+            "tags": [tag.name for tag in event.tags.all()],
         }
+        
         return JsonResponse(event_details)
-    except Event.DoesNotExist:
-        return JsonResponse({"error": "Event not found"}, status=404)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+
+@csrf_exempt
+def getAllEvents(request):
+    if request.method != 'GET':
+        return JsonResponse({"error": "GET method required"}, status=400)
+    
+    try:
+        events = Event.objects.all()
+        event_list = []
+
+        for event in events:
+            event_list.append({
+                "id": event.id,
+                "title": event.title,
+                "description": event.description,
+                "date": str(event.date),
+                "location": event.location,
+                "price": float(event.price),
+                "categories": [cat.name for cat in event.categories.all()],
+                "tags": [tag.name for tag in event.tags.all()],
+            })
+
+        return JsonResponse({"events": event_list}, status=200)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 
 @csrf_exempt
@@ -181,7 +215,7 @@ def bookEvent(request, event_id):
 
 
 @csrf_exempt
-def getBooking(request):
+def getBookings(request):
     if request.method != 'GET':
         return JsonResponse({"error": "GET method required"}, status=400)
     
@@ -190,7 +224,7 @@ def getBooking(request):
         username = data.get('username')
         bookings = Booking.objects.filter(username=username)
         event = bookings.values_list('event', flat=True)        
-        event_details = getEventDetails(request, event)
+        event_details = getEvent(request)
         return JsonResponse(event_details, safe=False)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)

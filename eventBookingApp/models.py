@@ -7,16 +7,13 @@ class User(AbstractUser):
     phone = models.CharField(max_length=200)
     address = models.TextField()
 
-class Category(models.Model):
-    id = models.AutoField(primary_key=True)
+class Category(models.Model):    
     name = models.CharField(max_length=200)
 
-class Tag(models.Model):
-    id = models.AutoField(primary_key=True)
+class Tag(models.Model):    
     name = models.CharField(max_length=200)
 
 class Event(models.Model):
-    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200)
     description = models.TextField()
     date = models.DateField()
