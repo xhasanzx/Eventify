@@ -2,16 +2,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('register/', views.register, name='register'),
-    path('login/', views.login, name='login'),
-    path('viewAccount/', views.viewAccount, name='viewAccount'),
-    
-    path('getBooking/', views.getBookings, name='getBooking'),    
-    path('bookEvent/<int:event_id>/', views.bookEvent, name='bookEvent'),
-    
-    path('event/add/', views.addEvent, name='addEvent'),
-    path('event/edit/', views.editEvent, name='editEvent'),
-    path('event/delete/', views.deleteEvent, name='deleteEvent'),
-    path('event/get/', views.getEvent, name='getEvent'),
-    path('event/getAll/', views.getAllEvents, name='getAllEvents'),
+    path('', views.home, name='home'),
+    path('login/', views.login_view, name='login'),
+    path('signup/', views.signup_view, name='signup'),
+    path('logout/', views.logout_view, name='logout'),
+    path('events/', views.events_view, name='events'),
+    path('events/<int:event_id>/', views.event_details, name='event_details'),
+    path('events/<int:event_id>/book/', views.book_event, name='book_event'),
 ]
