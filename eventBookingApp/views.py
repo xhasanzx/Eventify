@@ -1,6 +1,11 @@
 from django.shortcuts import render, redirect
 import json
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Event, Booking, User, Category, Tag
 from django.http import JsonResponse
 from django.contrib.auth import login as auth_login, authenticate, logout
@@ -8,60 +13,86 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import IntegrityError
 
-# Create your views here.
-@csrf_exempt
-def api_login(request):
-    if request.method != 'POST':
-        return JsonResponse({"error": "POST method required"}, status=400)
-
-    try:
-        data = json.loads(request.body)
-        username = data.get('username')
-        password = data.get('password')
-        
-        user = User.objects.get(username=username, password=password)
-        return JsonResponse({"message": "Login successful, Welcome " + user.username})
-    except User.DoesNotExist:
-        return JsonResponse({"error": "Invalid credentials"}, status=401)    
-
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def home(request):
+    return redirect('events')
 
 @csrf_exempt
-def register(request):
-    if request.method != 'POST':
-        return JsonResponse({"error": "POST method required"}, status=400)
-    
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
+
+def login_page(request):
+    return render(request, 'login.html')
+
+@api_view(['POST'])
+def login_view(request):
+    data = request.data
+    username = data.get('username')
+    password = data.get('password')
+
+    user = authenticate(request, username=username, password=password)
+
+    if user is not None:
+        tokens = get_tokens_for_user(user)
+
+        return Response({
+            'msg': 'Login successful',
+            'tokens': tokens,
+        }, status=status.HTTP_200_OK)
+    else:
+        return Response({
+            'error': 'Invalid credentials.'
+        }, status=status.HTTP_401_UNAUTHORIZED)
+
+def signup_page(request):
+    return render(request, 'signup.html')
+
+@api_view(['POST'])
+def signup_view(request):
     try:
-        data = json.loads(request.body)
+        data = request.data
         username = data.get('username')
         email = data.get('email')
+        password1 = data.get('password1')
+        password2 = data.get('password2')
         phone = data.get('phone')
         address = data.get('address')
-        password = data.get('password')
-        
-        if User.objects.filter(username=username).exists():
-            return JsonResponse({"error": "Username already taken"}, status=400)
-        
-        User.objects.create_user(
+
+        if password1 != password2:
+            messages.error(request, 'Passwords do not match.')
+            return render(request, 'signup.html')
+
+        user = User.objects.create_user(
             username=username,
             email=email,
+            password=password1,
             phone=phone,
-            address=address,
-            password=password
-            )        
-        return JsonResponse({"message": "User registered successfully, welcome " + username})
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=400)
+            address=address
+        )
+        user.save()
+        tokens = get_tokens_for_user(user)
+        auth_login(request, user)
+        return Response({
+            'msg': 'User created successfully',
+            'tokens': tokens,
+        }, status=status.HTTP_201_CREATED)
+    except IntegrityError:
+        messages.error(request, 'Username or email already exists.')
+        return Response({
+            'error': 'Username or email already exists.',
+        }, status=status.HTTP_400_BAD_REQUEST)
+        #return render(request, 'signup.html')
 
-
-@csrf_exempt
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def viewAccount(request):
-    if request.method != 'GET':
-        return JsonResponse({"error": "GET method required"}, status=400)    
-    
     try:
-        data = json.loads(request.body)
-        username = data.get('username')
-        user = User.objects.get(username=username)
+        user = request.user
         
         return JsonResponse({
             "username": user.username,
@@ -70,93 +101,9 @@ def viewAccount(request):
             "address": user.address
         })
     except User.DoesNotExist:
-        return JsonResponse({"error": "User not found"}, status=404)            
-
-
-@csrf_exempt
-def addEvent(request):
-    if request.method != 'POST':
-        return JsonResponse({"error": "POST method required"}, status=400)
-    
-    try:
-        data = json.loads(request.body)
-        title = data.get('title')
-        description = data.get('description')
-        date = data.get('date')
-        location = data.get('location')
-        price = data.get('price')
-        image_url = data.get('image_url')
-        categories = data.get('categories')
-        tags = data.get('tags')
-        
-        event = Event.objects.create(
-            title=title,
-            description=description,
-            date=date,
-            location=location,
-            price=price,
-            image_url=image_url
-        )
-        for cat_name in categories:
-            category, _ = Category.objects.get_or_create(name=cat_name)
-            event.categories.add(category)
-
-        for tag_name in tags:
-            tag, _ = Tag.objects.get_or_create(name=tag_name)
-            event.tags.add(tag)
-        return JsonResponse({"message": "Event added successfully"})
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=400)
-
-
-@csrf_exempt
-def editEvent(request):
-    if request.method != 'POST':
-        return JsonResponse({"error": "POST method required"}, status=400)
-    
-    try:
-        data = json.loads(request.body)
-        event_id = data.get('event_id')
-        event = Event.objects.get(id=event_id)
-        
-        event.title = data.get('title')
-        event.description = data.get('description')
-        event.date = data.get('date')
-        event.location = data.get('location')
-        event.price = data.get('price')
-        event.image_url = data.get('image_url')
-        
-        categories = data.get('categories')
-        tags = data.get('tags')
-        
-        for cat_name in categories:
-            category, _ = Category.objects.get_or_create(name=cat_name)
-            event.categories.add(category)
-
-        for tag_name in tags:
-            tag, _ = Tag.objects.get_or_create(name=tag_name)
-            event.tags.add(tag)
-            
-        event.save()
-        return JsonResponse({"message": "Event updated successfully"})
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=400)
-    
-
-@csrf_exempt
-def deleteEvent(request):
-    if request.method != 'DELETE':
-        return JsonResponse({"error": "DELETE method required"}, status=400)
-    
-    try:
-        data = json.loads(request.body)
-        event_id = data.get('event_id')
-        event = Event.objects.get(id=event_id)
-        event.delete()
-        return JsonResponse({"message": "Event deleted successfully"})
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=400)
-
+        return JsonResponse({
+            "error": "User not found"
+        }, status=status.HTTP_404_NOT_FOUND)
 
 @csrf_exempt
 def getEvent(request):
@@ -183,12 +130,9 @@ def getEvent(request):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
 
-
-@csrf_exempt
+@api_view(['GET'])
+@permission_classes([AllowAny])
 def getAllEvents(request):
-    if request.method != 'GET':
-        return JsonResponse({"error": "GET method required"}, status=400)
-    
     try:
         events = Event.objects.all()
         event_list = []
@@ -210,7 +154,6 @@ def getAllEvents(request):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
 
-
 @csrf_exempt
 def bookEvent(request, event_id):
     if request.method != 'POST':
@@ -227,7 +170,6 @@ def bookEvent(request, event_id):
     except Event.DoesNotExist:
         return JsonResponse({"error": "Event not found"}, status=404)
 
-
 @csrf_exempt
 def getBookings(request):
     if request.method != 'GET':
@@ -243,49 +185,6 @@ def getBookings(request):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
 
-
-def  home(request):
-    return redirect('events')
-
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            auth_login(request, user)
-            return redirect('events')
-        else:
-            messages.error(request, 'Invalid username or password.')
-    return render(request, 'login.html')
-
-def signup_view(request):
-    if request.method == 'POST':
-        try:
-            username = request.POST['username']
-            email = request.POST['email']
-            password1 = request.POST['password1']
-            password2 = request.POST['password2']
-            phone = request.POST['phone']
-            address = request.POST['address']
-
-            if password1 != password2:
-                messages.error(request, 'Passwords do not match.')
-                return render(request, 'signup.html')
-
-            user = User.objects.create_user(
-                username=username,
-                email=email,
-                password=password1,
-                phone=phone,
-                address=address
-            )
-            auth_login(request, user)
-            return redirect('events')
-        except IntegrityError:
-            messages.error(request, 'Username or email already exists.')
-    return render(request, 'signup.html')
-
 @login_required
 def logout_view(request):
     logout(request)
@@ -294,10 +193,8 @@ def logout_view(request):
 @login_required
 def events_view(request):
     events = Event.objects.all()
-    # Get all bookings for the current user
     user_bookings = Booking.objects.filter(username=request.user.username).values_list('event_id', flat=True)
-    
-    # Add booking status to each event
+
     events_with_status = []
     for event in events:
         event_dict = {
@@ -352,4 +249,3 @@ def book_event(request, event_id):
             messages.error(request, 'Failed to book event.')
             return redirect('event_details', event_id=event_id)
     return redirect('events')
-
