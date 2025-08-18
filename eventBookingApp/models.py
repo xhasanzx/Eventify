@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
 class User(AbstractUser):        
     email = models.EmailField(max_length=200, unique=True)
     phone = models.CharField(max_length=200)
@@ -41,4 +40,7 @@ class Booking(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     username = models.CharField(max_length=200)
     booking_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.event
     

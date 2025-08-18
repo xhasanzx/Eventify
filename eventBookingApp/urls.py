@@ -10,6 +10,7 @@ urlpatterns = [
     path('signup_page/', views.signup_page, name='signup_page'),
     path('api/signup/', views.signup_view, name='signup'),
     path('api/user/account/', views.viewAccount, name='view_account'),
+    path('api/logout/', views.logout_view, name='logout'),
 
     path('api/events/', views.getAllEvents, name='events'),
     path('api/events/<int:event_id>/', views.event_details, name='event_details'),

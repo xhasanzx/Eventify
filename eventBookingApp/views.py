@@ -205,47 +205,56 @@ def events_view(request):
     
     return render(request, 'events.html', {'events': events_with_status})
 
-@login_required
+@api_view(['GET'])
+@permission_classes([AllowAny])
 def event_details(request, event_id):
     try:
         event = Event.objects.get(id=event_id)
-        is_booked = Booking.objects.filter(
-            event_id=event_id,
-            username=request.user.username
-        ).exists()
+
+        if request.user:
+            is_booked = Booking.objects.filter(
+                event_id=event_id,
+                username=request.user.username
+            ).exists()
         
-        return render(request, 'event_details.html', {
-            'event': event,
-            'is_booked': is_booked
-        })
+            return render(request, 'event_details.html', {
+                'event': event,
+                'is_booked': is_booked})
+
+        return render(request, 'event_details.html', {})
     except Event.DoesNotExist:
         messages.error(request, 'Event not found.')
         return redirect('events')
 
-@login_required
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def book_event(request, event_id):
-    if request.method == 'POST':
-        try:
-            # Check if user has already booked this event
-            existing_booking = Booking.objects.filter(
-                event_id=event_id,
-                username=request.user.username
-            ).exists()
-            
-            if existing_booking:
-                messages.error(request, 'You have already booked this event!')
-                return redirect('event_details', event_id=event_id)
-            
-            event = Event.objects.get(id=event_id)
-            Booking.objects.create(
-                event=event,
-                username=request.user.username
-            )
-            return render(request, 'booking_success.html', {'event': event})
-        except Event.DoesNotExist:
-            messages.error(request, 'Event not found.')
-            return redirect('events')
-        except Exception as e:
-            messages.error(request, 'Failed to book event.')
+    user = request.user
+    try:
+        existing_booking = Booking.objects.filter(
+            event_id=event_id,
+            username=user.username
+        ).exists()
+
+        if existing_booking:
+            messages.error(request, 'You have already booked this event!')
             return redirect('event_details', event_id=event_id)
-    return redirect('events')
+
+        event = Event.objects.get(id=event_id)
+        Booking.objects.create(
+            event=event,
+            username=user.username
+        )
+        return render(request, 'booking_success.html', {'event': event})
+    except Event.DoesNotExist:
+        messages.error(request, 'Event not found.')
+        return redirect('events')
+    except Exception as e:
+        messages.error(request, 'Failed to book event.')
+        return redirect('event_details', event_id=event_id)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def logout_view(request):
+    logout(request)
+    return redirect('login')
