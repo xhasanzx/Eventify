@@ -1,12 +1,16 @@
-from django.shortcuts import render, redirect
 import json
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Event, Booking, User
-from django.http import JsonResponse
-from django.contrib import messages
-from ..events_app.views import getEvent
+
+from .models import Booking
+from users_app.models import User
+from events_app.models import Event
+from events_app import views as events_views
+
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -39,7 +43,7 @@ def getBookings(request):
         username = data.get('username')
         bookings = Booking.objects.filter(username=username)
         event = bookings.values_list('event', flat=True)        
-        event_details = getEvent(request)
+        event_details = events_views.getEvent(request)
         return JsonResponse(event_details, safe=False)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)

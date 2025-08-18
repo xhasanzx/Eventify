@@ -1,5 +1,5 @@
 from django.db import models
-from backend.events_app.models import Event
+from events_app.models import Event
 
 class Booking(models.Model):
     id = models.AutoField(primary_key=True)
