@@ -5,7 +5,7 @@ class Event(models.Model):
     description = models.TextField()
     date = models.DateField()
     location = models.CharField(max_length=200)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=0)
     image_url = models.URLField(max_length=500, blank=True, null=True)    
 
     def __str__(self):
