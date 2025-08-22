@@ -12,22 +12,31 @@ export function EventsList({ events, setEvents }) {
     <>
       <h3>Current Events</h3>
       {events.length === 0 && <p>No events founds</p>}
-      <ul>
+      <div className="d-flex flex-wrap gap-3">
         {events.map((event) => (
-          <li key={event.id}>
+          <div
+            key={event.id}
+            className="card"
+            style={{
+              width: "18rem",
+              alignItems: "center",
+              padding: "2rem",
+            }}
+          >
             <img
               src={event.image_url}
               alt={event.title}
-              style={{ width: "200px", height: "100px" }}
+              style={{ width: "300px", height: "150px" }}
             />
-
-            <div>{event.title}</div>
-            <div>{event.description}</div>
-            <div>{event.price}$</div>
-            <div>{event.location}</div>
-          </li>
+            <div className="card-body">
+              <div>{event.title}</div>
+              <div>{event.description}</div>
+              <div>{event.price}$</div>
+              <div>{event.location}</div>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </>
   );
 }
