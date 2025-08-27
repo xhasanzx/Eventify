@@ -1,13 +1,24 @@
-export function Navbar() {
+import { Link, useLocation } from "react-router-dom";
+
+const navItems = [
+  { path: "/", label: "Home" },
+  { path: "/events", label: "Events" },
+  { path: "/my-plans", label: "My Plans" },
+  { path: "/friends-plans", label: "Friends" },
+];
+
+export default function Navbar() {
+  const location = useLocation();
+
   return (
     <nav
       className="navbar navbar-expand-lg navbar-dark shadow-sm"
       style={{ backgroundColor: "#4F98CA" }}
     >
       <div className="container">
-        <a className="navbar-brand fw-bold" href="#">
-          Gatheraway
-        </a>
+        <Link className="navbar-brand fw-bold" to="/">
+          Meet Up
+        </Link>
 
         <button
           className="navbar-toggler"
@@ -23,31 +34,18 @@ export function Navbar() {
 
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <a className="nav-link active" href="/">
-                Home
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/events">
-                Events
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/my-plans">
-                My Plans
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/friends-plans">
-                Friends Plans
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/create-event">
-                Create Event
-              </a>
-            </li>
+            {navItems.map((item, index) => (
+              <li key={index} className="nav-item">
+                <Link
+                  className={`nav-link ${
+                    location.pathname === item.path ? "active" : ""
+                  }`}
+                  to={item.path}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

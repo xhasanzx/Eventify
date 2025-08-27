@@ -1,37 +1,43 @@
-import { useState } from "react";
-import { AddEventForm } from "./components/AddEventForm";
-import { EventsList } from "./components/EventsList";
-import { Navbar } from "./components/navbar";
+import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import Navbar from "./components/navbar";
+
+import Home from "./pages/home";
+import Events from "./pages/events";
+import MyPlans from "./pages/my-plans";
+import FriendsPlans from "./pages/friends-plans";
 
 function App() {
-  const user = {
-    name: "admin",
-  };
-
   const [events, setEvents] = useState([]);
-  const [newEvent, setNewEvent] = useState({
-    title: "",
-    description: "",
-    date: "",
-    location: "",
-    image_url: "",
-    price: 0,
-  });
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
 
   return (
     <div style={{ backgroundColor: "#F9F6F7", minHeight: "100vh" }}>
-      <Navbar />
-      <div className="container py-4">
-        <EventsList events={events} setEvents={setEvents} />
-
-        {user.name === "admin" && (
-          <AddEventForm
-            newEvent={newEvent}
-            setNewEvent={setNewEvent}
-            setEvents={setEvents}
-          />
-        )}
-      </div>
+      <Router>
+        <Navbar />
+        <div className="container mt-4">
+          <Routes>
+            <Route
+              path="/"
+              element={<Home events={events} setEvents={setEvents} />}
+            />
+            <Route
+              path="/events"
+              element={<Events events={events} setEvents={setEvents} />}
+            />
+            <Route path="/my-plans" element={<MyPlans />} />
+            <Route path="/friends-plans" element={<FriendsPlans />} />
+          </Routes>
+        </div>
+      </Router>
     </div>
   );
 }

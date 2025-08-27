@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import API from "../api";
 
-export function EventsList({ events, setEvents }) {
+export default function EventsList({ events, setEvents }) {
   useEffect(() => {
     API.get("/events")
       .then((res) => setEvents(res.data.events))
@@ -25,7 +25,7 @@ export function EventsList({ events, setEvents }) {
   return (
     <div
       className="d-flex justify-content-center"
-      style={{ marginTop: "10px", marginBottom: "25px" }}
+      style={{ marginTop: "-80px", marginBottom: "25px" }}
     >
       <div style={{ color: "#F6F6F6", maxWidth: "1200px", width: "100%" }}>
         <h3 className="text-center mb-4">Your Events</h3>
