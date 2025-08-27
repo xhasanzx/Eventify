@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 
 from .models import Event
-from .serializers import EventSerializer
+from backend.serializers import EventSerializer
 
 
 @api_view(['POST'])

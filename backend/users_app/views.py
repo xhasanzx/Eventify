@@ -1,16 +1,17 @@
-from django.shortcuts import render
-from django.contrib.auth import authenticate, login as auth_login, logout
+
+from django.contrib.auth import authenticate, login as auth_login
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django.http import JsonResponse
-from django.contrib import messages
 from django.db import IntegrityError
 from .models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import redirect
 from rest_framework import status
+from events_app.models import Event
+from backend.serializers import UserSerializer
+
 
 @csrf_exempt
 def get_tokens_for_user(user):
@@ -21,11 +22,8 @@ def get_tokens_for_user(user):
     }
 
 
-def login_page(request):
-    return render(request, 'login.html')
-
-
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def login_view(request):
     data = request.data
     username = data.get('username')
@@ -46,11 +44,8 @@ def login_view(request):
         }, status=status.HTTP_401_UNAUTHORIZED)
 
 
-def signup_page(request):
-    return render(request, 'signup.html')
-
-
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def signup_view(request):
     try:
         data = request.data
@@ -59,18 +54,17 @@ def signup_view(request):
         password1 = data.get('password1')
         password2 = data.get('password2')
         phone = data.get('phone')
-        address = data.get('address')
 
         if password1 != password2:
-            messages.error(request, 'Passwords do not match.')
-            return render(request, 'signup.html')
+            return JsonResponse({
+                'error': 'Passwords do not match.'
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         user = User.objects.create_user(
             username=username,
             email=email,
             password=password1,
-            phone=phone,
-            address=address
+            phone=phone,            
         )
         user.save()
         tokens = get_tokens_for_user(user)
@@ -79,34 +73,67 @@ def signup_view(request):
             'msg': 'User created successfully',
             'tokens': tokens,
         }, status=status.HTTP_201_CREATED)
-    except IntegrityError:
-        messages.error(request, 'Username or email already exists.')
-        return Response({
-            'error': 'Username or email already exists.',
-        }, status=status.HTTP_400_BAD_REQUEST)
-        #return render(request, 'signup.html')
+        
+    except IntegrityError as e:
+        return JsonResponse({
+            'error': 'IntegrityError: ' + str(e),
+        }, status=status.HTTP_400_BAD_REQUEST)        
 
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def viewAccount(request):
     try:
-        user = request.user
-        
+        user = UserSerializer(request.user)    
+                
         return JsonResponse({
-            "username": user.username,
-            "email": user.email,
-            "phone": user.phone,
-            "address": user.address
-        })
+            "user": user.data
+        }, status=status.HTTP_200_OK)
     except User.DoesNotExist:
         return JsonResponse({
             "error": "User not found"
         }, status=status.HTTP_404_NOT_FOUND)
 
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def logout_view(request):
-    logout(request)
-    return redirect('login')
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_user_events(request):
+    user = request.user
+    events = Event.objects.filter(host=user)
+    
+    if events.count() == 0:
+        return JsonResponse({
+            "error": "You currently have no events, try creating one."
+        }, status=status.HTTP_200_OK)
+    else:
+        return JsonResponse({
+            "events": events
+        }, status=status.HTTP_200_OK)
+    
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_user_friends(request):
+    user = request.user
+    friends = user.friends.all()
+    
+    if friends.count() == 0:
+        return JsonResponse({
+            "error": "You currently have no friends, try adding some."
+        }, status=status.HTTP_200_OK)
+    else:                
+        return JsonResponse({
+            "friends": [friend.username for friend in friends]
+        }, status=status.HTTP_200_OK)
+    
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def add_friend(request):
+    user = request.user
+    friend_id = request.data.get('friend_id')
+    friend = User.objects.get(id=friend_id)
+    user.friends.add(friend)
+    return JsonResponse({
+        "message": "Friend added successfully"
+    }, status=status.HTTP_200_OK)
