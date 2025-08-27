@@ -1,4 +1,4 @@
-import API from "./api";
+import API from "../api";
 
 export function AddEventForm({ newEvent, setNewEvent, setEvents }) {
   const handleChange = (e) => {
@@ -30,7 +30,6 @@ export function AddEventForm({ newEvent, setNewEvent, setEvents }) {
       <div
         className="card"
         style={{
-          marginTop: "20px",
           padding: "1.5rem",
           maxWidth: "600px",
           width: "100%",

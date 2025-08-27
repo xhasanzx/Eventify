@@ -7,5 +7,8 @@ class User(AbstractUser):
     address = models.TextField()
     is_admin = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.username
+    
     def has_admin_access(self):
         return self.is_admin or self.is_superuser

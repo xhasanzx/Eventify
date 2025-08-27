@@ -6,6 +6,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('', events_views.getAllEvents, name='events'),
     path('events/', include('events_app.urls')),
-    path('users/', include('users_app.urls')),
-    path('bookings/', include('bookings_app.urls')),
+    path('users/', include('users_app.urls')),    
 ]

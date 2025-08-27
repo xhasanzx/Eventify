@@ -1,8 +1,6 @@
-from django.shortcuts import render
 from django.http import JsonResponse
-from django.shortcuts import redirect
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAdminUser
+from rest_framework.permissions import AllowAny
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 
@@ -11,7 +9,6 @@ from .serializers import EventSerializer
 
 
 @api_view(['POST'])
-#@permission_classes([IsAdminUser])
 def create_event(request):    
     try:
         serializer = EventSerializer(data=request.data)
@@ -53,5 +50,3 @@ def getAllEvents(request):
         return JsonResponse({"events": serializer.data}, status=200)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
-
-

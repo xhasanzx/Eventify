@@ -37,11 +37,11 @@ AUTH_USER_MODEL = "users_app.User"
 
 INSTALLED_APPS = [
     "users_app",
-    "events_app",
-    "bookings_app",
+    "events_app",    
     'rest_framework',
     'rest_framework_simplejwt',
     "corsheaders",
+    
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -58,6 +58,7 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE = [    
     "corsheaders.middleware.CorsMiddleware",    
+    
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
