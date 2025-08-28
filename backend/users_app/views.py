@@ -10,7 +10,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from events_app.models import Event
-from backend.serializers import UserSerializer
+from backend.serializers import UserSerializer, EventSerializer
 
 
 @csrf_exempt
@@ -99,7 +99,8 @@ def viewAccount(request):
 @permission_classes([IsAuthenticated])
 def get_user_events(request):
     user = request.user
-    events = Event.objects.filter(host=user)
+    events = Event.objects.filter(host=user)    
+    serializer = EventSerializer(events, many=True)
     
     if events.count() == 0:
         return JsonResponse({
@@ -107,7 +108,7 @@ def get_user_events(request):
         }, status=status.HTTP_200_OK)
     else:
         return JsonResponse({
-            "events": events
+            "events": serializer.data
         }, status=status.HTTP_200_OK)
     
 

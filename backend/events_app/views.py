@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 
@@ -9,6 +9,7 @@ from backend.serializers import EventSerializer
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_event(request):    
     try:
         serializer = EventSerializer(data=request.data)
@@ -36,17 +37,3 @@ def getEvent(request, id):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
 
-
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def getAllEvents(request):
-    try:        
-        try:
-            events = Event.objects.all()
-        except Event.DoesNotExist:
-            return JsonResponse({"message": "No events found"}, status=404)
-        
-        serializer = EventSerializer(events, many=True)
-        return JsonResponse({"events": serializer.data}, status=200)
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
