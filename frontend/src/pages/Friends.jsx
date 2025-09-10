@@ -1,7 +1,9 @@
-export default function FriendsPlans() {
+import FriendsPlans from "../components/FriendsPlans";
+
+export default function FriendsPage({ friendsEvents, setFriendsEvents }) {
   return (
     <div>
-      <h1>Friends Plans</h1>
+      <FriendsPlans events={friendsEvents} setEvents={setFriendsEvents} />
     </div>
   );
 }

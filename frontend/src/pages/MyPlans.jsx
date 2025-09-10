@@ -1,17 +1,20 @@
-import AddEventForm  from "../components/AddEventForm";
-import EventsList from "../components/EventsList";
-import { useState } from "react";
+import AddPlanForm from "../components/AddPlanForm";
+import UserPlans from "../components/UserPlans";
 
-export default function MyPlans({ events, setEvents, newEvent, setNewEvent }) {
+export default function MyPlans({
+  userEvents,
+  setUserEvents,
+  newEvent,
+  setNewEvent,
+}) {
   return (
     <div>
-      <h1>My Plans</h1>
-      <AddEventForm
+      <AddPlanForm
         newEvent={newEvent}
         setNewEvent={setNewEvent}
-        setEvents={setEvents}
+        setEvents={setUserEvents}
       />
-      <EventsList events={events} setEvents={setEvents} />
+      <UserPlans events={userEvents} setEvents={setUserEvents} />
     </div>
   );
 }

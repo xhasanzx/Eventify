@@ -2,9 +2,8 @@ import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
   { path: "/", label: "Home" },
-  { path: "/events", label: "Events" },
-  { path: "/my-plans", label: "My Plans" },
-  { path: "/friends-plans", label: "Friends" },
+  { path: "/MyPlans", label: "My Plans" },
+  { path: "/Friends", label: "Friends" },
 ];
 
 export default function Navbar() {
@@ -17,7 +16,7 @@ export default function Navbar() {
     >
       <div className="container">
         <Link className="navbar-brand fw-bold" to="/">
-          Meet Up
+          Planify
         </Link>
 
         <button

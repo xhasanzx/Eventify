@@ -84,7 +84,7 @@ def signup_view(request):
 def viewAccount(request):
     try:
         user = UserSerializer(request.user)    
-                
+        
         return JsonResponse({
             "user": user.data
         }, status=status.HTTP_200_OK)
@@ -103,11 +103,11 @@ def get_user_events(request):
     
     if events.count() == 0:
         return JsonResponse({
-            "error": "You currently have no events, try creating one."
+            "error": "You currently have no plans."
         }, status=status.HTTP_200_OK)
     else:
         return JsonResponse({
-            "events": serializer.data
+            "plans": serializer.data
         }, status=status.HTTP_200_OK)
     
 

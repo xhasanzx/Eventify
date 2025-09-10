@@ -1,7 +1,10 @@
-export default function EventCard({ event, setEvents }) {
+import axios from "axios";
+import API from "../api";
+
+export default function PlanCard({ canDelete = false, key, event, setEvents }) {
   const handleDelete = (eventId) => {
     if (window.confirm("Are you sure you want to delete this event?")) {
-      API.delete(`/event/delete/${eventId}/`)
+      axios.delete(`/event/delete/${eventId}/`)
         .then(() => {
           setEvents(events.filter((event) => event.id !== eventId));
           alert("Event deleted successfully!");
@@ -12,10 +15,11 @@ export default function EventCard({ event, setEvents }) {
         });
     }
   };
+
   return (
     <div>
       <div
-        key={event.id}
+        key={key}
         className="card"
         style={{
           width: "280px",
@@ -50,19 +54,20 @@ export default function EventCard({ event, setEvents }) {
             <span className="badge bg-primary">${event.price}</span>
           </div>
 
-          <button
-            className="btn btn-danger btn-sm w-100"
-            style={{
-              fontSize: "11px",
-              padding: "4px 8px",
-              borderRadius: "6px",
-            }}
-            onClick={() => handleDelete(event.id)}
-            title="Delete Event"
-          >
-            Delete
-          </button>
-
+          {canDelete && (
+            <button
+              className="btn btn-danger btn-sm w-100"
+              style={{
+                fontSize: "11px",
+                padding: "4px 8px",
+                borderRadius: "6px",
+              }}
+              onClick={() => handleDelete(event.id)}
+              title="Delete Event"
+            >
+              Delete
+            </button>
+          )}
         </div>
       </div>
     </div>
