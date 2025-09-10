@@ -17,18 +17,15 @@ export default function LoginForm() {
         console.log(res);
         setTokens(res.data.tokens.access, res.data.tokens.refresh);
 
-        // Trigger a custom event to notify App component
         window.dispatchEvent(new Event("loginSuccess"));
-
-        // Force a page refresh as fallback
-        window.location.reload();
+        window.location.href = "/";
       })
       .catch((err) => {
         console.log(err);
         alert("Login failed. Please check your credentials.");
       });
   };
-
+  
   return (
     <div
       style={{

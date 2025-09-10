@@ -24,3 +24,6 @@ class Event(models.Model):
     
     def __str__(self):
         return self.title
+    
+    def is_host(self, user):
+        return self.host == user

@@ -11,10 +11,10 @@ from backend.serializers import EventSerializer
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_event(request):    
-    try:
+    try:                        
         serializer = EventSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(host=request.user)
             return Response({"message": "Event created successfully", "event": serializer.data}, status=201)
         
         return Response(serializer.errors, status=400)
@@ -37,3 +37,20 @@ def getEvent(request, id):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
 
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteEvent(request, id):
+    try:        
+        try:
+            event = Event.objects.get(pk=id)            
+        except Event.DoesNotExist:
+            return JsonResponse({"message": "Event not found"}, status=404)
+        
+        if event.host != request.user:
+            return JsonResponse({"message": "You do not have permission to delete this event"}, status=403)
+        
+        event.delete()
+        return JsonResponse({"message": "Event deleted successfully"}, status=200)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)

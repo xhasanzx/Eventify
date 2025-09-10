@@ -7,10 +7,18 @@ import Home from "./pages/home";
 import Events from "./pages/events";
 import MyPlans from "./pages/my-plans";
 import FriendsPlans from "./pages/friends-plans";
-import LoginForm from "./components/login_form";
+import LoginForm from "./components/LoginForm";
 
 function App() {
   const [events, setEvents] = useState([]);
+  const [newEvent, setNewEvent] = useState({
+    title: "",
+    description: "",
+    date: "",
+    location: "",
+    image_url: "",
+    price: 0,
+  });
   const [isLoggedIn, setIsLoggedIn] = useState(
     !!localStorage.getItem("access")
   );
@@ -56,7 +64,17 @@ function App() {
               path="/events"
               element={<Events events={events} setEvents={setEvents} />}
             />
-            <Route path="/my-plans" element={<MyPlans />} />
+            <Route
+              path="/my-plans"
+              element={
+                <MyPlans
+                  events={events}
+                  setEvents={setEvents}
+                  newEvent={newEvent}
+                  setNewEvent={setNewEvent}
+                />
+              }
+            />
             <Route path="/friends-plans" element={<FriendsPlans />} />
           </Routes>
         </div>

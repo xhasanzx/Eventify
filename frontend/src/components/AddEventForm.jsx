@@ -1,6 +1,6 @@
 import API from "../api";
 
-export function AddEventForm({ newEvent, setNewEvent, setEvents }) {
+export default function AddEventForm({ newEvent, setNewEvent, setEvents }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewEvent((prev) => ({ ...prev, [name]: value }));
@@ -9,7 +9,7 @@ export function AddEventForm({ newEvent, setNewEvent, setEvents }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    API.post("/events/create/", newEvent)
+    API.post("/event/create/", newEvent)
       .then((res) => {
         alert("Event created!");
         setEvents((prev) => [...prev, res.data.event]);
