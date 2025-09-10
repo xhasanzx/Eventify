@@ -11,8 +11,8 @@ export default function AddEventForm({ newEvent, setNewEvent, setEvents }) {
 
     API.post("/plan/create/", newEvent)
       .then((res) => {
-        alert("Plan created!");
-        setEvents((prev) => [...prev, res.data.event]);
+        alert("Plan successfully created!");
+        setEvents((prev) => [...prev, res.data.plan]);
         setNewEvent({
           title: "",
           description: "",
@@ -37,13 +37,13 @@ export default function AddEventForm({ newEvent, setNewEvent, setEvents }) {
           borderRadius: "12px",
         }}
       >
-        <h3 className="text-center mb-3">Create a new event</h3>
+        <h3 className="text-center mb-3">Create a new plan</h3>
 
         <div>
           {newEvent.image_url && (
             <img
               src={newEvent.image_url}
-              alt="Event preview"
+              alt="Plan preview"
               style={{
                 width: "100%",
                 maxHeight: "200px",
@@ -124,7 +124,7 @@ export default function AddEventForm({ newEvent, setNewEvent, setEvents }) {
 
           <div className="col-12 text-center">
             <button type="submit" className="btn btn-primary px-4">
-              Create Event
+              Create Plan
             </button>
           </div>
         </form>

@@ -1,17 +1,18 @@
-import axios from "axios";
 import API from "../api";
 
-export default function PlanCard({ canDelete = false, key, event, setEvents }) {
+export default function PlanCard({ canDelete = false, event, setEvents }) {
   const handleDelete = (eventId) => {
     if (window.confirm("Are you sure you want to delete this event?")) {
-      axios.delete(`/plan/delete/${eventId}/`)
+      API.delete(`/plan/delete/${eventId}/`)
         .then(() => {
-          setEvents(events.filter((event) => event.id !== eventId));
-          alert("Event deleted successfully!");
+          setEvents((prevEvents) =>
+            prevEvents.filter((event) => event.id !== eventId)
+          );
+          alert("Plan deleted successfully!");
         })
         .catch((err) => {
-          console.error("Error deleting event:", err);
-          alert("Failed to delete event. Please try again.");
+          console.error("Error deleting plan:", err);
+          alert("Failed to delete plan. Please try again.");
         });
     }
   };
@@ -19,7 +20,7 @@ export default function PlanCard({ canDelete = false, key, event, setEvents }) {
   return (
     <div>
       <div
-        key={key}
+        key={event.id}
         className="card"
         style={{
           width: "280px",

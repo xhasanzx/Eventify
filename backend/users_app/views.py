@@ -34,12 +34,12 @@ def login_view(request):
         tokens = get_tokens_for_user(user)
 
         return Response({
-            'msg': 'Login successful',
+            'msg': 'login successful',
             'tokens': tokens,
         }, status=status.HTTP_200_OK)
     else:
         return Response({
-            'error': 'Invalid credentials.'
+            'error': 'invalid credentials.'
         }, status=status.HTTP_401_UNAUTHORIZED)
 
 
@@ -56,7 +56,7 @@ def signup_view(request):
 
         if password1 != password2:
             return JsonResponse({
-                'error': 'Passwords do not match.'
+                'error': 'passwords do not match.'
             }, status=status.HTTP_400_BAD_REQUEST)
 
         user = User.objects.create_user(
@@ -69,7 +69,7 @@ def signup_view(request):
         tokens = get_tokens_for_user(user)
         auth_login(request, user)
         return Response({
-            'msg': 'User created successfully',
+            'msg': 'user created successfully',
             'tokens': tokens,
         }, status=status.HTTP_201_CREATED)
         
@@ -90,7 +90,7 @@ def viewAccount(request):
         }, status=status.HTTP_200_OK)
     except User.DoesNotExist:
         return JsonResponse({
-            "error": "User not found"
+            "error": "user not found"
         }, status=status.HTTP_404_NOT_FOUND)
 
 
@@ -103,7 +103,7 @@ def get_user_plans(request):
     
     if plans.count() == 0:
         return JsonResponse({
-            "error": "You currently have no plans."
+            "error": "you currently have no plans."
         }, status=status.HTTP_200_OK)
     else:
         return JsonResponse({
@@ -119,11 +119,11 @@ def get_user_friends(request):
     
     if friends.count() == 0:
         return JsonResponse({
-            "error": "You currently have no friends, try adding some."
+            "error": "you currently have no friends, try adding some."
         }, status=status.HTTP_200_OK)
     else:                
         return JsonResponse({
-            "friends": [friend.username for friend in friends]
+            "friends": [friend.id for friend in friends]
         }, status=status.HTTP_200_OK)
     
 
@@ -135,5 +135,5 @@ def add_friend(request):
     friend = User.objects.get(id=friend_id)
     user.friends.add(friend)
     return JsonResponse({
-        "message": "Friend added successfully"
+        "message": "friend added successfully"
     }, status=status.HTTP_200_OK)

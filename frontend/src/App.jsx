@@ -11,8 +11,9 @@ import API from "./api";
 
 function App() {
   const [userEvents, setUserEvents] = useState([]);
+  const [friends, setFriends] = useState([]);
   const [friendsEvents, setFriendsEvents] = useState([]);
-  
+
   useEffect(() => {
     API.get("user/plans/")
       .then((res) => {
@@ -24,11 +25,21 @@ function App() {
   useEffect(() => {
     API.get("user/friends/")
       .then((res) => {
-        setFriendsEvents(res.data);
+        setFriends(res.data.friends);
       })
       .catch((err) => console.error(err));
   }, []);
-  
+  useEffect(() => {
+    friends.forEach((friend) => {
+      console.log(friend);
+      API.get(`plan/host/${friend}/`)
+        .then((res) => {
+          setFriendsEvents([...friendsEvents, ...res.data]);
+        })
+        .catch((err) => console.error(err));
+    });
+  }, [friends]);
+
   const [newEvent, setNewEvent] = useState({
     title: "",
     description: "",
@@ -37,7 +48,7 @@ function App() {
     image_url: "",
     price: 0,
   });
-  
+
   const [isLoggedIn, setIsLoggedIn] = useState(
     !!localStorage.getItem("access")
   );

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import axios from "axios";
 import PlanCard from "./PlanCard";
 
 export default function FriendsPlans({ events, setEvents }) {
