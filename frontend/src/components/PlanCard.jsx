@@ -4,7 +4,7 @@ import API from "../api";
 export default function PlanCard({ canDelete = false, key, event, setEvents }) {
   const handleDelete = (eventId) => {
     if (window.confirm("Are you sure you want to delete this event?")) {
-      axios.delete(`/event/delete/${eventId}/`)
+      axios.delete(`/plan/delete/${eventId}/`)
         .then(() => {
           setEvents(events.filter((event) => event.id !== eventId));
           alert("Event deleted successfully!");

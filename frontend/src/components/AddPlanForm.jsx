@@ -9,9 +9,9 @@ export default function AddEventForm({ newEvent, setNewEvent, setEvents }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    API.post("/event/create/", newEvent)
+    API.post("/plan/create/", newEvent)
       .then((res) => {
-        alert("Event created!");
+        alert("Plan created!");
         setEvents((prev) => [...prev, res.data.event]);
         setNewEvent({
           title: "",

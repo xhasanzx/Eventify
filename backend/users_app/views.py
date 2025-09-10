@@ -8,8 +8,8 @@ from .models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
-from events_app.models import Event
-from backend.serializers import UserSerializer, EventSerializer
+from plans_app.models import Plan
+from backend.serializers import UserSerializer, PlanSerializer
 
 
 @csrf_exempt
@@ -96,12 +96,12 @@ def viewAccount(request):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-def get_user_events(request):
+def get_user_plans(request):
     user = request.user
-    events = Event.objects.filter(host=user)    
-    serializer = EventSerializer(events, many=True)
+    plans = Plan.objects.filter(host=user)
+    serializer = PlanSerializer(plans, many=True)
     
-    if events.count() == 0:
+    if plans.count() == 0:
         return JsonResponse({
             "error": "You currently have no plans."
         }, status=status.HTTP_200_OK)

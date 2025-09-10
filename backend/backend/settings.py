@@ -37,7 +37,7 @@ AUTH_USER_MODEL = "users_app.User"
 
 INSTALLED_APPS = [
     "users_app",
-    "events_app",    
+    "plans_app",    
     'rest_framework',
     'rest_framework_simplejwt',
     "corsheaders",

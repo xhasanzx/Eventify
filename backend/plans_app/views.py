@@ -4,18 +4,18 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 
-from .models import Event
-from backend.serializers import EventSerializer
+from .models import Plan
+from backend.serializers import PlanSerializer
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_event(request):    
     try:                        
-        serializer = EventSerializer(data=request.data)
+        serializer = PlanSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(host=request.user)
-            return Response({"message": "Event created successfully", "event": serializer.data}, status=201)
+            return Response({"message": "Plan created successfully", "Plan": serializer.data}, status=201)
         
         return Response(serializer.errors, status=400)
     except Exception as e:
@@ -25,14 +25,14 @@ def create_event(request):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 @csrf_exempt
-def getEvent(request, id):    
+def get_plan(request, id):    
     try:        
         try:
-            event = Event.objects.get(pk=id)            
-        except Event.DoesNotExist:
-            return JsonResponse({"message": "Event not found"}, status=404)
+            event = Plan.objects.get(pk=id)            
+        except Plan.DoesNotExist:
+            return JsonResponse({"message": "Plan not found"}, status=404)
         
-        serializer = EventSerializer(event)
+        serializer = PlanSerializer(event)
         return JsonResponse(serializer.data, status=200)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
@@ -40,17 +40,17 @@ def getEvent(request, id):
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def deleteEvent(request, id):
+def delete_Plan(request, id):
     try:        
         try:
-            event = Event.objects.get(pk=id)            
-        except Event.DoesNotExist:
-            return JsonResponse({"message": "Event not found"}, status=404)
+            plan = Plan.objects.get(pk=id)            
+        except Plan.DoesNotExist:
+            return JsonResponse({"message": "Plan not found"}, status=404)
         
-        if event.host != request.user:
-            return JsonResponse({"message": "You do not have permission to delete this event"}, status=403)
+        if plan.host != request.user:
+            return JsonResponse({"message": "You do not have permission to delete this Plan"}, status=403)
         
-        event.delete()
-        return JsonResponse({"message": "Event deleted successfully"}, status=200)
+        plan.delete()
+        return JsonResponse({"message": "Plan deleted successfully"}, status=200)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)

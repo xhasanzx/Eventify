@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from users_app.models import User
-from events_app.models import Event
+from plans_app.models import Plan
 
-class EventSerializer(serializers.ModelSerializer):
+class PlanSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Event
+        model = Plan
         fields = "__all__"
         read_only_fields = ["host"]
 

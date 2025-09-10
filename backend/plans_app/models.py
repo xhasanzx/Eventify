@@ -1,7 +1,6 @@
 from django.db import models
-from users_app.models import User
 
-class Event(models.Model):
+class Plan(models.Model):
     
     host = models.ForeignKey(
         'users_app.User', 
@@ -10,7 +9,7 @@ class Event(models.Model):
     
     attendees = models.ManyToManyField(
         'users_app.User', 
-        related_name='attended_events',
+        related_name='attended_plans',
         blank=True
         )
     
@@ -23,7 +22,4 @@ class Event(models.Model):
     is_active = models.BooleanField(default=True)    
     
     def __str__(self):
-        return self.title
-    
-    def is_host(self, user):
-        return self.host == user
+        return self.title    
