@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API, { setTokens } from "../api";
+import { Link } from "react-router-dom";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
@@ -28,7 +29,9 @@ export default function LoginForm() {
         console.log(err);
         setError("Invalid credentials. Please try again.");
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setIsLoading(false);        
+      });
   };
 
   return (
@@ -100,6 +103,10 @@ export default function LoginForm() {
                 </button>
               </div>
             </div>
+
+            <p>
+              Don't have an account? <Link to="/signup">Sign up</Link>
+            </p>
 
             <button
               type="submit"

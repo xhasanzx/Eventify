@@ -1,20 +1,23 @@
 import AddPlanForm from "../components/AddPlanForm";
-import UserPlans from "../components/UserPlans";
+import MyPlans from "../components/MyPlans";
 
-export default function MyPlans({
+export default function MyPlansPage({
   userEvents,
   setUserEvents,
   newEvent,
   setNewEvent,
 }) {
   return (
-    <div>
+    <>
+      <MyPlans
+        events={userEvents ? userEvents : []}
+        setEvents={setUserEvents}
+      />
       <AddPlanForm
         newEvent={newEvent}
         setNewEvent={setNewEvent}
         setEvents={setUserEvents}
       />
-      <UserPlans events={userEvents} setEvents={setUserEvents} />
-    </div>
+    </>
   );
 }

@@ -29,7 +29,7 @@ export default function Logout({ onConfirm, onCancel }) {
 
   const bodyStyle = {
     padding: "16px 20px",
-    color: "#444",    
+    color: "#444",
   };
 
   const footerStyle = {

@@ -51,19 +51,13 @@ def signup_view(request):
         data = request.data
         username = data.get('username')
         email = data.get('email')
-        password1 = data.get('password1')
-        password2 = data.get('password2')
-        phone = data.get('phone')
-
-        if password1 != password2:
-            return JsonResponse({
-                'error': 'passwords do not match.'
-            }, status=status.HTTP_400_BAD_REQUEST)
+        password = data.get('password')        
+        phone = data.get('phone')    
 
         user = User.objects.create_user(
             username=username,
             email=email,
-            password=password1,
+            password=password,
             phone=phone,            
         )
         user.save()
@@ -108,6 +102,7 @@ def get_user_plans(request):
         }, status=status.HTTP_200_OK)
     else:
         return JsonResponse({
+            "username": user.username.capitalize(),
             "plans": serializer.data
         }, status=status.HTTP_200_OK)
     

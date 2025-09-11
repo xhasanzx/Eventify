@@ -1,11 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import Logout from "./logout";
+import Logout from "./Logout";
 import { useEffect, useState } from "react";
 
 const navItems = [
   { path: "/", label: "Home" },
-  { path: "/MyPlans", label: "My Plans" },
-  { path: "/Friends", label: "Friends" },
+  { path: "/my-plans", label: "My Plans" },
+  { path: "/friends", label: "Friends" },
 ];
 
 export default function Navbar() {
@@ -23,7 +23,7 @@ export default function Navbar() {
   function handleConfirmLogout() {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
-    window.location.href = "/";
+    window.location.href = "/login";
   }
 
   return (
@@ -33,10 +33,24 @@ export default function Navbar() {
       )}
       <nav
         className="navbar navbar-expand-lg navbar-dark shadow-sm"
-        style={{ backgroundColor: "#4F98CA" }}
+        style={{
+          background: "linear-gradient(90deg, #4F98CA 0%, #3b82f6 100%)",
+          fontSize: "18px",
+          fontWeight: 600,
+          paddingTop: "8px",
+          paddingBottom: "8px",
+        }}
       >
         <div className="container">
-          <Link className="navbar-brand fw-bold" to="/">
+          <Link
+            className="navbar-brand fw-bold"
+            to="/"
+            style={{
+              fontSize: "28px",
+              fontWeight: 700,
+              letterSpacing: "0.3px",
+            }}
+          >
             Planify
           </Link>
 
@@ -55,11 +69,19 @@ export default function Navbar() {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
               {navItems.map((item, index) => (
-                <li key={index} className="nav-item">
+                <li key={index} className="nav-item me-1">
                   <Link
-                    className={`nav-link ${
+                    className={`nav-link px-3 py-2 fw-semibold ${
                       location.pathname === item.path ? "active" : ""
                     }`}
+                    style={{
+                      borderRadius: "8px",
+                      color: "#fff",
+                      backgroundColor:
+                        location.pathname === item.path
+                          ? "rgba(255,255,255,0.15)"
+                          : "transparent",
+                    }}
                     to={item.path}
                   >
                     {item.label}
@@ -67,9 +89,15 @@ export default function Navbar() {
                 </li>
               ))}
 
-              <li className="nav-item">
+              <li className="nav-item d-flex align-items-center ms-2">
                 <button
-                  className="nav-link btn btn-link"
+                  className="btn btn-danger text-white d-flex align-items-center justify-content-center"
+                  style={{
+                    height: "40px",
+                    padding: "0 14px",
+                    fontWeight: 600,
+                    borderRadius: "8px",
+                  }}
                   onClick={handleOpenLogout}
                 >
                   Logout

@@ -5,7 +5,7 @@ class Plan(models.Model):
     host = models.ForeignKey(
         'users_app.User', 
         on_delete=models.CASCADE,        
-        )
+        )    
     
     attendees = models.ManyToManyField(
         'users_app.User', 

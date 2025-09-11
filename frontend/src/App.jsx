@@ -2,27 +2,31 @@ import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import API from "./api";
-import Navbar from "./components/NavBar";
+import Navbar from "./components/Navbar";
 
-import Home from "./pages/Home";
-import MyPlans from "./pages/MyPlans";
-import FriendsPage from "./pages/Friends";
-import LoginForm from "./components/LoginForm";
-import Logout from "./components/Logout";
+import HomePage from "./pages/HomePage";
+import MyPlansPage from "./pages/MyPlansPage";
+import FriendsPage from "./pages/FriendsPage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 
 function App() {
+  const [username, setUsername] = useState("");
   const [userEvents, setUserEvents] = useState([]);
   const [friends, setFriends] = useState([]);
   const [friendsEvents, setFriendsEvents] = useState([]);
 
+  // Get User Plans
   useEffect(() => {
     API.get("user/plans/")
       .then((res) => {
+        setUsername(res.data.username);
         setUserEvents(res.data.plans);
       })
       .catch((err) => console.error(err));
   }, []);
 
+  // Get User Friends
   useEffect(() => {
     API.get("user/friends/")
       .then((res) => {
@@ -31,6 +35,7 @@ function App() {
       .catch((err) => console.error(err));
   }, []);
 
+  // Get Friends' Plans
   useEffect(() => {
     friends.forEach((friend) => {
       console.log(friend);
@@ -48,7 +53,6 @@ function App() {
     date: "",
     location: "",
     image_url: "",
-    price: 0,
   });
 
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -76,9 +80,11 @@ function App() {
 
   if (!isLoggedIn) {
     return (
-      <div style={{ backgroundColor: "#F9F6F7", minHeight: "100vh" }}>
-        <LoginForm />
-      </div>
+      <Router>
+        <Routes>
+          <Route path="*" element={<LoginPage />} />
+        </Routes>
+      </Router>
     );
   }
 
@@ -92,7 +98,8 @@ function App() {
               <Route
                 path="/"
                 element={
-                  <Home
+                  <HomePage
+                    username={username}
                     userEvents={userEvents}
                     setUserEvents={setUserEvents}
                     friendsEvents={friendsEvents}
@@ -101,9 +108,9 @@ function App() {
                 }
               />
               <Route
-                path="/MyPlans"
+                path="/my-plans"
                 element={
-                  <MyPlans
+                  <MyPlansPage
                     userEvents={userEvents}
                     setUserEvents={setUserEvents}
                     newEvent={newEvent}
@@ -112,14 +119,14 @@ function App() {
                 }
               />
               <Route
-                path="/Friends"
+                path="/friends"
                 element={
                   <FriendsPage
                     friendsEvents={friendsEvents}
                     setFriendsEvents={setFriendsEvents}
                   />
                 }
-              />              
+              />
             </Routes>
           </div>
         </Router>
