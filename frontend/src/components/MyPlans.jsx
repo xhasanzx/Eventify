@@ -2,12 +2,11 @@ import React from "react";
 import PlanCard from "./PlanCard";
 
 export default function MyPlans({ events, setEvents }) {
-  console.log(events);
   const safeEvents = Array.isArray(events) ? events : [];
   return (
     <div className="d-flex justify-content-center mb-4">
       <div
-        className="card"
+        className="card "
         style={{
           padding: "1.5rem",
           maxWidth: "1200px",
@@ -35,8 +34,7 @@ export default function MyPlans({ events, setEvents }) {
             <div className="d-flex flex-row flex-nowrap gap-3">
               {safeEvents.map((event) => (
                 <div style={{ flex: "0 0 auto" }} key={event.id}>
-                  <PlanCard
-                    canDelete={true}
+                  <PlanCard                    
                     event={event}
                     setEvents={setEvents}
                   />

@@ -5,7 +5,7 @@ export default function FriendsPlans({ events, setEvents }) {
   console.log(events);
   const safeEvents = Array.isArray(events) ? events : [];
   return (
-    <div className="d-flex justify-content-center mb-4">
+    <>
       <div
         className="card"
         style={{
@@ -27,17 +27,13 @@ export default function FriendsPlans({ events, setEvents }) {
             <div className="d-flex flex-row flex-nowrap gap-3">
               {safeEvents.map((event) => (
                 <div style={{ flex: "0 0 auto" }} key={event.id}>
-                  <PlanCard
-                    canDelete={false}
-                    event={event}
-                    setEvents={setEvents}
-                  />
+                  <PlanCard event={event} setEvents={setEvents} />
                 </div>
               ))}
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

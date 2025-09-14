@@ -94,7 +94,7 @@ def viewAccount(request):
 def get_user_plans(request):
     user = request.user
     plans = Plan.objects.filter(host=user)
-    serializer = PlanSerializer(plans, many=True)
+    serializer = PlanSerializer(plans, many=True, context={'request': request})
     
     if plans.count() == 0:
         return JsonResponse({

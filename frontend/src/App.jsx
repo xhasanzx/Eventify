@@ -8,13 +8,13 @@ import HomePage from "./pages/HomePage";
 import MyPlansPage from "./pages/MyPlansPage";
 import FriendsPage from "./pages/FriendsPage";
 import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
 
 function App() {
   const [username, setUsername] = useState("");
   const [userEvents, setUserEvents] = useState([]);
   const [friends, setFriends] = useState([]);
   const [friendsEvents, setFriendsEvents] = useState([]);
+
 
   // Get User Plans
   useEffect(() => {
