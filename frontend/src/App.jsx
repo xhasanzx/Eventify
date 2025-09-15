@@ -8,6 +8,7 @@ import HomePage from "./pages/HomePage";
 import MyPlansPage from "./pages/MyPlansPage";
 import FriendsPage from "./pages/FriendsPage";
 import LoginPage from "./pages/LoginPage";
+import PlanDetailsPage from "./pages/PlanDetailsPage";
 
 function App() {
   const [username, setUsername] = useState("");
@@ -126,6 +127,10 @@ function App() {
                     setFriendsEvents={setFriendsEvents}
                   />
                 }
+              />
+              <Route
+                path="/plan/:id"
+                element={<PlanDetailsPage />}
               />
             </Routes>
           </div>
