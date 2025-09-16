@@ -26,7 +26,7 @@ export default function PlanDetailsPage() {
         borderRadius: "8px",
         boxShadow: "4px 4px 6px rgba(0, 0, 0, 0.1)",
         width: "100%",
-        maxWidth: "1800px",
+        maxWidth: "1400px",
         height: "100%",
       }}
     >
@@ -38,9 +38,9 @@ export default function PlanDetailsPage() {
             style={{
               backgroundColor: "#DDDAD0",
               padding: "1px 1px 1px 1px",
-              marginBottom: "40px",
-              width: "80%",
-              height: "400px",
+              marginBottom: "24px",
+              width: "100%",
+              height: "420px",
               objectFit: "cover",
               borderRadius: "8px",
               boxShadow: "4px 4px 6px rgba(0, 0, 0, 0.1)",
@@ -51,26 +51,25 @@ export default function PlanDetailsPage() {
       )}
 
       <div
-        className="col-md-4"
+        className="col-md-5"
         style={{
           fontSize: "1.2rem",
           marginTop: "20px",
           textAlign: "left",
         }}
       >
-        <h3 className="" style={{ fontSize: "2rem" }}>
+        <h3 className="" style={{ fontSize: "2.2rem" }}>
           {event?.description}
         </h3>
-        <p className="">
+        <p className="" style={{ fontSize: "1.05rem" }}>
           {event?.location} | {event?.date.split("T")[0]}
         </p>
 
         {event?.is_host && (
           <div
-            className="row mb-2"
+            className="row justify-content-between  mb-2"
             style={{
               gap: "10px",
-              width: "100%",
             }}
           >
             <DeletePlanButton
