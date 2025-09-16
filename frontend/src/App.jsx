@@ -3,13 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import API from "./api";
 import Navbar from "./components/Navbar";
-
 import HomePage from "./pages/HomePage";
-import MyPlansPage from "./pages/MyPlansPage";
-import FriendsPage from "./pages/FriendsPage";
 import LoginPage from "./pages/LoginPage";
 import PlanDetailsPage from "./pages/PlanDetailsPage";
 import EditPlanPage from "./pages/EditPlanPage";
+import PlansPage from "./pages/PlansPage";
 
 function App() {
   const [username, setUsername] = useState("");
@@ -46,14 +44,6 @@ function App() {
       })
       .catch((err) => console.error(err));
   }, [friends]);
-
-  const [newEvent, setNewEvent] = useState({
-    title: "",
-    description: "",
-    date: "",
-    location: "",
-    image_url: "",
-  });
 
   const [isLoggedIn, setIsLoggedIn] = useState(
     !!localStorage.getItem("access")
@@ -101,29 +91,29 @@ function App() {
                   <HomePage
                     username={username}
                     userEvents={userEvents}
-                    setUserEvents={setUserEvents}
                     friendsEvents={friendsEvents}
-                    setFriendsEvents={setFriendsEvents}
                   />
                 }
               />
               <Route
                 path="/your-plans"
                 element={
-                  <MyPlansPage
-                    userEvents={userEvents}
-                    setUserEvents={setUserEvents}
-                    newEvent={newEvent}
-                    setNewEvent={setNewEvent}
+                  <PlansPage
+                    events={userEvents}
+                    isHost={true}
+                    isFriends={false}
+                    hostUsername={username}
                   />
                 }
               />
               <Route
                 path="/friends"
                 element={
-                  <FriendsPage
-                    friendsEvents={friendsEvents}
-                    setFriendsEvents={setFriendsEvents}
+                  <PlansPage
+                    events={friendsEvents}
+                    isHost={false}
+                    isFriends={true}
+                    hostUsername={"friends"}
                   />
                 }
               />
