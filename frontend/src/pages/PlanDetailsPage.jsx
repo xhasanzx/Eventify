@@ -31,7 +31,6 @@ export default function PlanDetailsPage() {
       }}
     >
       <h1 className="text-center mb-4 col-12">{event?.title}</h1>
-
       {event?.image_url && (
         <div className=" col-7">
           <img
@@ -51,39 +50,38 @@ export default function PlanDetailsPage() {
       )}
 
       <div
-        className="col-md-5"
+        className={`col-md-${event?.image_url ? "5" : "12"}`}
         style={{
           fontSize: "1.2rem",
           marginTop: "20px",
           textAlign: "left",
         }}
       >
-        <h3 className="" style={{ fontSize: "2.2rem" }}>
+        <h3 className="col-12" style={{ fontSize: "2.2rem" }}>
           {event?.description}
         </h3>
-        <p className="" style={{ fontSize: "1.05rem" }}>
+        <p className="col-12" style={{ fontSize: "1.25rem" }}>
           {event?.location} | {event?.date.split("T")[0]}
         </p>
 
         {event?.is_host && (
           <div
-            className="row justify-content-between  mb-2"
+            className="col-12 mb-2"
             style={{
               gap: "10px",
             }}
           >
-            <DeletePlanButton
-              className="col-6"
-              event={event}
-              setEvents={setEvents}
-            />
-            <EditPlanButton className="col-6" event={event} />
+            <div className="row">
+              <div className="col-6 ">
+                <DeletePlanButton event={event} setEvents={setEvents} />
+              </div>
+
+              <div className="col-6 ">
+                <EditPlanButton event={event} />
+              </div>
+            </div>
           </div>
         )}
-
-        {!event?.is_host && (
-            <p className="mb-2"> Host: {event?.host_username}</p>
-          ) && <button className="btn btn-primary">Coming</button>}
 
         {event?.attendees > 0 && (
           <p className="mb-2"> Attendees: {event?.attendees}</p>

@@ -27,6 +27,7 @@ export default function DeletePlanButton({ event, setEvents }) {
         fontSize: "0.95rem",
         padding: "8px 8px",
         borderRadius: "8px",
+        width: "100%",
       }}
       onClick={handleDelete}
       title="Delete Event"

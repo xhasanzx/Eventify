@@ -10,7 +10,8 @@ export default function EditPlanButton({ event }) {
       style={{
         fontSize: "0.95rem",
         padding: "8px 8px",
-        borderRadius: "8px",        
+        borderRadius: "8px",
+        width: "100%",
       }}
       title="Edit Plan"
       onClick={goToEditPlan}

@@ -26,8 +26,7 @@ export default function EditPlanPage() {
         maxWidth: "1400px",
         height: "100%",
       }}
-    >
-      <h1 className="text-center mb-4 col-12">Edit Plan</h1>
+    >      
 
       {event ? (
         <EditPlanForm event={event} />

@@ -30,12 +30,16 @@ export default function EditPlanForm({ event: prevEvent }) {
       [name]: type === "checkbox" ? checked : value,
     });
   };
-  
+
   return (
     <>
       <div className=" mb-4 row">
-        <div className="col-7">
-          {prevEvent.image_url && (
+        <h1 className="text-center mb-4 col-12">
+          {updatedEvent?.image_url ? "Edit Plan" : updatedEvent?.title}
+        </h1>
+
+        {updatedEvent.image_url && (
+          <div className="col-7">
             <img
               style={{
                 backgroundColor: "#DDDAD0",
@@ -50,12 +54,12 @@ export default function EditPlanForm({ event: prevEvent }) {
               }}
               src={updatedEvent.image_url || "https://placehold.co/600x400"}
             />
-          )}
-        </div>
+          </div>
+        )}
 
-        <div className="col-5">
+        <div className={`col-${updatedEvent.image_url ? "5" : "12"}`}>
           <form className="row g-3" onSubmit={handleSubmit}>
-            <div className="col-md-6">
+            <div className={`col-md-${updatedEvent.image_url ? "6" : "3"}`}>
               <label className="form-label" style={{ fontSize: "1.05rem" }}>
                 Name:{" "}
               </label>
@@ -68,7 +72,7 @@ export default function EditPlanForm({ event: prevEvent }) {
               />
             </div>
 
-            <div className="col-md-6">
+            <div className={`col-md-${updatedEvent.image_url ? "6" : "3"}`}>
               <label className="form-label" style={{ fontSize: "1.05rem" }}>
                 Location:{" "}
               </label>
@@ -81,7 +85,7 @@ export default function EditPlanForm({ event: prevEvent }) {
               />
             </div>
 
-            <div className="col-6">
+            <div className={`col-md-${updatedEvent.image_url ? "6" : "3"}`}>
               <label className="form-label" style={{ fontSize: "1.05rem" }}>
                 Date:{" "}
               </label>
@@ -93,7 +97,8 @@ export default function EditPlanForm({ event: prevEvent }) {
                 onChange={handleChange}
               />
             </div>
-            <div className="col-6">
+
+            <div className={`col-md-${updatedEvent.image_url ? "6" : "3"}`}>
               <label className="form-label" style={{ fontSize: "1.05rem" }}>
                 Image:{" "}
               </label>
@@ -136,7 +141,16 @@ export default function EditPlanForm({ event: prevEvent }) {
                 Active
               </label>
             </div>
-            <button type="submit" className="col-6 btn btn-primary px-4">
+            <button
+              type="submit"
+              className="col-2 btn btn-primary px-4"
+              style={{
+                marginLeft: "auto",
+                marginRight: "10px",
+                width: "100%",
+                maxWidth: "200px",
+              }}
+            >
               Save Changes
             </button>
           </form>

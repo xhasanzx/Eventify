@@ -77,7 +77,7 @@ export default function PlanCard({ event }) {
               className="card-text mb-2"
               style={{
                 fontSize: "0.85rem",
-                lineHeight: 1.2,
+                lineHeight: 1.3,
                 marginBottom: "1.5rem",
                 display: "-webkit-box",
                 WebkitLineClamp: 1,
