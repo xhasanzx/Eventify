@@ -73,7 +73,7 @@ def get_host_plan(request, host):
 
 
 @api_view(['PUT'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def update_plan(request, id):
     try:        
         try:
@@ -81,10 +81,10 @@ def update_plan(request, id):
         except Plan.DoesNotExist:
             return JsonResponse({"message": "plan not found"}, status=404)
         
-        # if plan.host != request.user:
-        #     return JsonResponse({
-        #         "message": "you do not have permission to update this Plan"
-        #         }, status=403)
+        if plan.host != request.user:
+            return JsonResponse({
+                "message": "you do not have permission to update this Plan"
+                }, status=403)
         
         serializer = PlanSerializer(plan, data=request.data, partial=True, context={'request': request})
         print(serializer.is_valid())

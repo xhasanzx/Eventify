@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import API from "../api";
 
-import DeletePlanButton from "../components/DeletePlanButton";
-import EditPlanButton from "../components/EditPlanButton";
+import Button from "../components/Button";
 
 export default function PlanDetailsPage() {
   const { id } = useParams();
@@ -73,11 +72,11 @@ export default function PlanDetailsPage() {
           >
             <div className="row">
               <div className="col-6 ">
-                <DeletePlanButton event={event} setEvents={setEvents} />
+                <Button event={event} setEvents={setEvents} status={true} />
               </div>
 
               <div className="col-6 ">
-                <EditPlanButton event={event} />
+                <Button event={event} setEvents={setEvents} status={false} />
               </div>
             </div>
           </div>
