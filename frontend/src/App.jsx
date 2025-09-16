@@ -79,7 +79,7 @@ function App() {
   }
 
   return (
-    <div style={{ backgroundColor: "#F9F6F7", minHeight: "100vh" }}>
+    <div className="main">
       {isLoggedIn && (
         <Router>
           <Navbar />

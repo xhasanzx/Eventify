@@ -16,51 +16,35 @@ export default function PlanDetailsPage() {
   }, [id]);
 
   return (
-    <div
-      className="container row"
-      style={{
-        backgroundColor: "#F5EFE6",
-        padding: "20px",
-        margin: "0 auto 0 auto",
-        borderRadius: "8px",
-        boxShadow: "4px 4px 6px rgba(0, 0, 0, 0.1)",
-        width: "100%",
-        maxWidth: "1400px",
-        height: "100%",
-      }}
-    >
-      <h1 className="text-center mb-4 col-12">{event?.title}</h1>
+    <div className="row plan-details-container">
+      <h1 className="mb-4 col-12 plan-details-title">{event?.title}</h1>
       {event?.image_url && (
         <div className=" col-7">
-          <img
-            style={{
-              backgroundColor: "#DDDAD0",
-              padding: "1px 1px 1px 1px",
-              marginBottom: "24px",
-              width: "100%",
-              height: "420px",
-              objectFit: "cover",
-              borderRadius: "8px",
-              boxShadow: "4px 4px 6px rgba(0, 0, 0, 0.1)",
-            }}
-            src={event?.image_url}
-          />
+          <img src={event?.image_url} />
         </div>
       )}
 
-      <div
-        className={`col-md-${event?.image_url ? "5" : "12"}`}
-        style={{
-          fontSize: "1.2rem",
-          marginTop: "20px",
-          textAlign: "left",
-        }}
-      >
-        <h3 className="col-12" style={{ fontSize: "2.2rem" }}>
+      <div className={`col-md-${event?.image_url ? "5" : "12"}`}>
+        <h3 className="col-12 plan-details-description">
           {event?.description}
         </h3>
-        <p className="col-12" style={{ fontSize: "1.25rem" }}>
-          {event?.location} | {event?.date.split("T")[0]}
+
+        <p className="col-12 plan-details-meta">
+          {
+            <span>
+              {event?.location} | {event?.date.split("T")[0]}
+              <br />
+            </span>
+          }
+          {!event?.is_host && (
+            <span>
+              Created by: {event?.host_username}
+              <br />
+            </span>
+          )}
+          {event?.attendees > 0 && (
+            <span>Number of attendees: {event?.attendees.length}</span>
+          )}
         </p>
 
         {event?.is_host && (
@@ -72,18 +56,18 @@ export default function PlanDetailsPage() {
           >
             <div className="row">
               <div className="col-6 ">
-                <Button event={event} setEvents={setEvents} status={true} />
+                <Button event={event} setEvents={setEvents} isDeleting={true} />
               </div>
 
               <div className="col-6 ">
-                <Button event={event} setEvents={setEvents} status={false} />
+                <Button
+                  event={event}
+                  setEvents={setEvents}
+                  isDeleting={false}
+                />
               </div>
             </div>
           </div>
-        )}
-
-        {event?.attendees > 0 && (
-          <p className="mb-2"> Attendees: {event?.attendees}</p>
         )}
       </div>
     </div>

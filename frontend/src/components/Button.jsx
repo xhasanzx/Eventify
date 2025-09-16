@@ -3,7 +3,7 @@ import { useState } from "react";
 import API from "../api";
 import "../style/style.css";
 
-export default function Button({ event, setEvents, status: isDeleting }) {
+export default function Button({ event, setEvents, isDeleting }) {
   const [status, setStatus] = useState(isDeleting);
 
   const handleDelete = (e) => {

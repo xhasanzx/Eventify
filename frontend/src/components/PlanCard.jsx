@@ -6,7 +6,7 @@ export default function PlanCard({ event }) {
     <Link to={`/plan/${event?.id}`} style={{ textDecoration: "none" }}>
       <div
         key={event?.id}
-        className="card plan-card"
+        className="plan-card"
         onMouseEnter={(e) =>
           (e.currentTarget.style.transform = "translateY(-5px)")
         }
@@ -14,10 +14,8 @@ export default function PlanCard({ event }) {
           (e.currentTarget.style.transform = "translateY(0)")
         }
       >
-        {event?.image_url && (
-          <img className="plan-card-img" src={event?.image_url} />
-        )}
-        <div className="card-body">
+        {event?.image_url && <img src={event?.image_url} />}
+        <div className="plan-card-body">
           <h6 className="plan-card-title mb-1">{event?.title}</h6>
 
           <p className="plan-card-text text-muted mb-1">
@@ -26,6 +24,7 @@ export default function PlanCard({ event }) {
           </p>
 
           <p className="plan-card-text mb-1">{event?.description}</p>
+
           {!event?.is_host && (
             <p className="plan-card-text mb-1">host: {event?.host_username}</p>
           )}

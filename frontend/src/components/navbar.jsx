@@ -33,13 +33,7 @@ export default function Navbar() {
       )}
       <nav
         className="navbar navbar-expand-lg navbar-dark shadow-sm"
-        style={{
-          background: "linear-gradient(90deg, #4F98CA 0%, #3b82f6 100%)",
-          fontSize: "18px",
-          fontWeight: 600,
-          paddingTop: "8px",
-          paddingBottom: "8px",
-        }}
+        
       >
         <div className="container">
           <Link
