@@ -9,13 +9,13 @@ import MyPlansPage from "./pages/MyPlansPage";
 import FriendsPage from "./pages/FriendsPage";
 import LoginPage from "./pages/LoginPage";
 import PlanDetailsPage from "./pages/PlanDetailsPage";
+import EditPlanPage from "./pages/EditPlanPage";
 
 function App() {
   const [username, setUsername] = useState("");
   const [userEvents, setUserEvents] = useState([]);
   const [friends, setFriends] = useState([]);
   const [friendsEvents, setFriendsEvents] = useState([]);
-
 
   // Get User Plans
   useEffect(() => {
@@ -38,14 +38,13 @@ function App() {
 
   // Get Friends' Plans
   useEffect(() => {
-    friends.forEach((friend) => {
-      console.log(friend);
-      API.get(`plan/host/${friend}/`)
-        .then((res) => {
-          setFriendsEvents([...friendsEvents, ...res.data]);
-        })
-        .catch((err) => console.error(err));
-    });
+    if (!friends || friends.length === 0) return;
+    Promise.all(friends.map((friend) => API.get(`plan/host/${friend}/`)))
+      .then((responses) => {
+        const merged = responses.flatMap((r) => r.data || []);
+        setFriendsEvents(merged);
+      })
+      .catch((err) => console.error(err));
   }, [friends]);
 
   const [newEvent, setNewEvent] = useState({
@@ -128,10 +127,8 @@ function App() {
                   />
                 }
               />
-              <Route
-                path="/plan/:id"
-                element={<PlanDetailsPage />}
-              />
+              <Route path="/plan/:id" element={<PlanDetailsPage />} />
+              <Route path="/plan/:id/edit" element={<EditPlanPage />} />
             </Routes>
           </div>
         </Router>

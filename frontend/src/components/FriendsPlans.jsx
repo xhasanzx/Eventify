@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import PlanCard from "./PlanCard";
 
 export default function FriendsPlans({ events, setEvents }) {
-  console.log(events);
   const safeEvents = Array.isArray(events) ? events : [];
   return (
     <>
@@ -27,7 +26,7 @@ export default function FriendsPlans({ events, setEvents }) {
             <div className="d-flex flex-row flex-nowrap gap-3">
               {safeEvents.map((event) => (
                 <div style={{ flex: "0 0 auto" }} key={event.id}>
-                  <PlanCard event={event} setEvents={setEvents} />
+                  <PlanCard event={event} />
                 </div>
               ))}
             </div>

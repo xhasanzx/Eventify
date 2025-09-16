@@ -9,7 +9,7 @@ class PlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
         fields = "__all__"
-        read_only_fields = ["host, host_username"]
+        read_only_fields = ["id", "attendees", "host", "host_username"]
 
     def get_is_host(self, obj):
         request = self.context.get("request")        

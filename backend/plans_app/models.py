@@ -16,8 +16,7 @@ class Plan(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     date = models.DateTimeField()
-    location = models.CharField(max_length=200)
-    price = models.DecimalField(max_digits=10, decimal_places=0)
+    location = models.CharField(max_length=200)    
     image_url = models.URLField(max_length=500, blank=True, null=True)    
     is_active = models.BooleanField(default=True)    
     

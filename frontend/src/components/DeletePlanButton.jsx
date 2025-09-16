@@ -22,7 +22,7 @@ export default function DeletePlanButton({ event, setEvents }) {
 
   return (
     <button
-      className="btn btn-danger w-100"
+      className="btn btn-danger"
       style={{
         fontSize: "0.95rem",
         padding: "8px 8px",

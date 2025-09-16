@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import API from "../api";
+
 import DeletePlanButton from "../components/DeletePlanButton";
+import EditPlanButton from "../components/EditPlanButton";
 
 export default function PlanDetailsPage() {
   const { id } = useParams();
@@ -64,9 +66,19 @@ export default function PlanDetailsPage() {
         </p>
 
         {event?.is_host && (
-          <div className="d-flex justify-content-between mb-2">
-            <DeletePlanButton event={event} setEvents={setEvents} />
-            <button className="btn btn-primary">Edit</button>
+          <div
+            className="row mb-2"
+            style={{
+              gap: "10px",
+              width: "100%",
+            }}
+          >
+            <DeletePlanButton
+              className="col-6"
+              event={event}
+              setEvents={setEvents}
+            />
+            <EditPlanButton className="col-6" event={event} />
           </div>
         )}
 

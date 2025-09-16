@@ -34,10 +34,7 @@ export default function MyPlans({ events, setEvents }) {
             <div className="d-flex flex-row flex-nowrap gap-3">
               {safeEvents.map((event) => (
                 <div style={{ flex: "0 0 auto" }} key={event.id}>
-                  <PlanCard                    
-                    event={event}
-                    setEvents={setEvents}
-                  />
+                  <PlanCard event={event} />
                 </div>
               ))}
             </div>

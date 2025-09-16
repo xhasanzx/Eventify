@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function PlanCard({ event, setEvents }) {
+export default function PlanCard({ event }) {
   return (
     <Link to={`/plan/${event.id}`} style={{ textDecoration: "none" }}>
       <div
@@ -8,7 +8,7 @@ export default function PlanCard({ event, setEvents }) {
         className="card"
         style={{
           height: "400px",
-          width: "300px",    
+          width: "300px",
           marginTop: "10px",
           padding: "1rem",
           boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
@@ -63,7 +63,7 @@ export default function PlanCard({ event, setEvents }) {
             <p
               className="card-text text-muted mb-2"
               style={{
-                lineHeight: 1,
+                lineHeight: 1.3,
                 fontSize: "0.95rem",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
