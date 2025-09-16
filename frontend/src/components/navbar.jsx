@@ -1,10 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
 import Logout from "./Logout";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const navItems = [
   { path: "/", label: "Home" },
-  { path: "/my-plans", label: "My Plans" },
+  { path: "/your-plans", label: "Your Plans" },
   { path: "/friends", label: "Friends" },
 ];
 

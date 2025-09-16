@@ -1,15 +1,13 @@
-import MyPlans from "../components/MyPlans";
+import CardsContainers from "../components/CardsContainers";
 
-export default function MyPlansPage({
-  userEvents,
-  setUserEvents,
-}) {
+export default function MyPlansPage({ userEvents }) {
   return (
     <>
-      <MyPlans
+      <CardsContainers
         events={userEvents ? userEvents : []}
-        setEvents={setUserEvents}
-      />      
+        title="Your Plans"
+        noDataMessage="You have no plans yet."
+      />
     </>
   );
 }

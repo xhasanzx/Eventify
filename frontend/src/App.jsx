@@ -108,7 +108,7 @@ function App() {
                 }
               />
               <Route
-                path="/my-plans"
+                path="/your-plans"
                 element={
                   <MyPlansPage
                     userEvents={userEvents}

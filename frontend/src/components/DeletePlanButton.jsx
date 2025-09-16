@@ -1,4 +1,5 @@
 import API from "../api";
+import "../style/style.css";
 
 export default function DeletePlanButton({ event, setEvents }) {
   const handleDelete = (e) => {
@@ -22,13 +23,7 @@ export default function DeletePlanButton({ event, setEvents }) {
 
   return (
     <button
-      className="btn btn-danger"
-      style={{
-        fontSize: "0.95rem",
-        padding: "8px 8px",
-        borderRadius: "8px",
-        width: "100%",
-      }}
+      className="btn btn-danger my-button"
       onClick={handleDelete}
       title="Delete Event"
     >

@@ -1,28 +1,23 @@
-import MyPlans from "../components/MyPlans";
-import FriendsPlans from "../components/FriendsPlans";
+import CardsContainers from "../components/CardsContainers";
 
-export default function HomePage({
-  username,
-  userEvents,
-  setUserEvents,
-  friendsEvents,
-  setFriendsEvents,
-}) {
+export default function HomePage({ username, userEvents, friendsEvents }) {
   return (
     <div>
       <div className="text-center">
         <h2>Welcome, {username}</h2>
       </div>
       <div className="container py-4">
-        <MyPlans
-          events={userEvents ? userEvents : []}
-          setEvents={setUserEvents}
+        <CardsContainers
+          events={friendsEvents ? friendsEvents : []}
+          title="Friends' Plans"
+          noDataMessage="Your friends have no plans yet."
         />
       </div>
       <div className="container py-4">
-        <FriendsPlans
-          events={friendsEvents ? friendsEvents : []}
-          setEvents={setFriendsEvents}
+        <CardsContainers
+          events={userEvents ? userEvents : []}
+          title="Your Plans"
+          noDataMessage="You have no plans yet."
         />
       </div>
     </div>

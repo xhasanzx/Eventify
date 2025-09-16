@@ -1,11 +1,12 @@
-import FriendsPlans from "../components/FriendsPlans";
+import CardsContainers from "../components/CardsContainers";
 
-export default function FriendsPage({ friendsEvents, setFriendsEvents }) {
+export default function FriendsPage({ friendsEvents }) {
   return (
     <div>
-      <FriendsPlans
+      <CardsContainers
         events={friendsEvents ? friendsEvents : []}
-        setEvents={setFriendsEvents}
+        title="Friends' Plans"
+        noDataMessage="Your friends have no plans yet."
       />
     </div>
   );
