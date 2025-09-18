@@ -32,130 +32,118 @@ export default function EditPlanForm({ event: prevEvent }) {
   };
 
   return (
-    <>
-      <div className=" mb-4 row">
-        <h1 className="text-center mb-4 col-12">
-          {updatedEvent?.image_url ? "Edit Plan" : updatedEvent?.title}
-        </h1>
+    <div className=" mb-4 row plan-details-container">
+      <h1 className="text-center mb-4 col-12">
+        {updatedEvent?.image_url ? "Edit Plan" : updatedEvent?.title}
+      </h1>
 
-        {updatedEvent.image_url && (
-          <div className="col-7">
-            <img
-              style={{
-                backgroundColor: "#DDDAD0",
-                padding: "1px 1px 1px 1px",
-                marginBottom: "40px",
-                marginRight: "10px",
-                width: "100%",
-                height: "400px",
-                objectFit: "cover",
-                borderRadius: "8px",
-                boxShadow: "4px 4px 6px rgba(0, 0, 0, 0.1)",
-              }}
-              src={updatedEvent.image_url || "https://placehold.co/600x400"}
+      {updatedEvent.image_url && (
+        <div className="col-7 ">
+          <img
+            className="plan-details-container-img"
+            src={updatedEvent.image_url || "https://placehold.co/600x400"}
+          />
+        </div>
+      )}
+
+      <div className={`col-${updatedEvent.image_url ? "5" : "12"}`}>
+        <form className="row g-3" onSubmit={handleSubmit}>
+          <div className={`col-md-${updatedEvent.image_url ? "6" : "3"}`}>
+            <label className="form-label" style={{ fontSize: "1.05rem" }}>
+              Name:{" "}
+            </label>
+            <input
+              type="text"
+              className="form-control form-control-lg"
+              name="title"
+              value={updatedEvent?.title}
+              onChange={handleChange}
             />
           </div>
-        )}
 
-        <div className={`col-${updatedEvent.image_url ? "5" : "12"}`}>
-          <form className="row g-3" onSubmit={handleSubmit}>
-            <div className={`col-md-${updatedEvent.image_url ? "6" : "3"}`}>
-              <label className="form-label" style={{ fontSize: "1.05rem" }}>
-                Name:{" "}
-              </label>
-              <input
-                type="text"
-                className="form-control form-control-lg"
-                name="title"
-                value={updatedEvent?.title}
-                onChange={handleChange}
-              />
-            </div>
+          <div className={`col-md-${updatedEvent.image_url ? "6" : "3"}`}>
+            <label className="form-label" style={{ fontSize: "1.05rem" }}>
+              Location:{" "}
+            </label>
+            <input
+              type="text"
+              className="form-control form-control-lg"
+              name="location"
+              value={updatedEvent?.location}
+              onChange={handleChange}
+            />
+          </div>
 
-            <div className={`col-md-${updatedEvent.image_url ? "6" : "3"}`}>
-              <label className="form-label" style={{ fontSize: "1.05rem" }}>
-                Location:{" "}
-              </label>
-              <input
-                type="text"
-                className="form-control form-control-lg"
-                name="location"
-                value={updatedEvent?.location}
-                onChange={handleChange}
-              />
-            </div>
+          <div className={`col-md-${updatedEvent.image_url ? "6" : "3"}`}>
+            <label className="form-label" style={{ fontSize: "1.05rem" }}>
+              Date:{" "}
+            </label>
+            <input
+              type="date"
+              className="form-control form-control-lg"
+              name="date"
+              value={updatedEvent?.date}
+              onChange={handleChange}
+            />
+          </div>
 
-            <div className={`col-md-${updatedEvent.image_url ? "6" : "3"}`}>
-              <label className="form-label" style={{ fontSize: "1.05rem" }}>
-                Date:{" "}
-              </label>
-              <input
-                type="date"
-                className="form-control form-control-lg"
-                name="date"
-                value={updatedEvent?.date}
-                onChange={handleChange}
-              />
-            </div>
+          <div className={`col-md-${updatedEvent.image_url ? "6" : "3"}`}>
+            <label className="form-label" style={{ fontSize: "1.05rem" }}>
+              Image:{" "}
+            </label>
+            <input
+              type="text"
+              className="form-control form-control-lg"
+              name="image_url"
+              value={updatedEvent?.image_url}
+              onChange={handleChange}
+            />
+          </div>
 
-            <div className={`col-md-${updatedEvent.image_url ? "6" : "3"}`}>
-              <label className="form-label" style={{ fontSize: "1.05rem" }}>
-                Image:{" "}
-              </label>
-              <input
-                type="text"
-                className="form-control form-control-lg"
-                name="image_url"
-                value={updatedEvent?.image_url}
-                onChange={handleChange}
-              />
-            </div>
+          <div className="col-12">
+            <label className="form-label" style={{ fontSize: "1.05rem" }}>
+              Description:{" "}
+            </label>
+            <textarea
+              className="form-control form-control-lg"
+              name="description"
+              value={updatedEvent?.description}
+              onChange={handleChange}
+              rows={4}
+            />
+          </div>
 
-            <div className="col-12">
-              <label className="form-label" style={{ fontSize: "1.05rem" }}>
-                Description:{" "}
-              </label>
-              <textarea
-                className="form-control form-control-lg"
-                name="description"
-                value={updatedEvent?.description}
-                onChange={handleChange}
-                rows={4}
-              />
-            </div>
-
-            <div className="col-6 d-flex align-items-center">
-              <input
-                type="checkbox"
-                className="form-check-input me-2"
-                id="is_active"
-                name="is_active"
-                checked={!!updatedEvent?.is_active}
-                onChange={handleChange}
-              />
-              <label
-                className="form-check-label"
-                htmlFor="is_active"
-                style={{ fontSize: "1.05rem" }}
-              >
-                Active
-              </label>
-            </div>
-            <button
-              type="submit"
-              className="col-2 btn btn-primary px-4"
-              style={{
-                marginLeft: "auto",
-                marginRight: "10px",
-                width: "100%",
-                maxWidth: "200px",
-              }}
+          <div className="col-6 d-flex align-items-center">
+            <input
+              type="checkbox"
+              className="form-check-input me-2"
+              id="is_active"
+              name="is_active"
+              checked={!!updatedEvent?.is_active}
+              onChange={handleChange}
+            />
+            <label
+              className="form-check-label"
+              htmlFor="is_active"
+              style={{ fontSize: "1.05rem" }}
             >
-              Save Changes
-            </button>
-          </form>
-        </div>
+              Active
+            </label>
+          </div>
+          <button
+            type="submit"
+            className="col-2 btn btn-primary px-4"
+            style={{
+              marginLeft: "auto",
+              marginRight: "10px",
+              width: "100%",
+              maxWidth: "200px",
+            }}
+          >
+            Save Changes
+          </button>
+        </form>
       </div>
-    </>
+    </div>
   );
 }

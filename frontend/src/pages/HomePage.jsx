@@ -2,12 +2,12 @@ import CardsContainers from "../components/CardsContainers";
 
 export default function HomePage({ username, userEvents, friendsEvents }) {
   return (
-    <div>
-      {/* <div className="text-center">
-        <h2 className="header">Welcome, {username}</h2>
-      </div> */}
-
-      <div className="container py-4">
+    <div
+      style={{
+        margin: "0 ",
+      }}
+    >
+      <div className="container ">
         <CardsContainers
           events={friendsEvents ? friendsEvents : []}
           title="Friends' Plans"

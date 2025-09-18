@@ -20,7 +20,7 @@ export default function PlanDetailsPage() {
       <h1 className="mb-4 col-12 plan-details-title">{event?.title}</h1>
       {event?.image_url && (
         <div className=" col-7">
-          <img src={event?.image_url} />
+          <img className="plan-details-container-img" src={event?.image_url} />
         </div>
       )}
 

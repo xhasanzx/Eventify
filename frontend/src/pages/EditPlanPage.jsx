@@ -14,20 +14,14 @@ export default function EditPlanPage() {
   }, [id]);
 
   return (
-    <div
-      className="container"
+    <div      
       style={{
-        backgroundColor: "#F5EFE6",
-        padding: "20px",
         margin: "0 auto 0 auto",
-        borderRadius: "8px",
-        boxShadow: "4px 4px 6px rgba(0, 0, 0, 0.1)",
         width: "100%",
         maxWidth: "1400px",
         height: "100%",
       }}
-    >      
-
+    >
       {event ? (
         <EditPlanForm event={event} />
       ) : (

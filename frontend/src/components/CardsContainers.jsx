@@ -20,7 +20,7 @@ export default function CardsContainers({
       {!willExpand && (
         <div
           className="d-flex flex-row flex-nowrap gap-3"
-          style={{ overflowX: "auto", paddingBottom: "6px" }}
+          style={{ overflowX: "auto" }}
         >
           {events?.map((event) => (
             <div style={{ flex: "0 0 auto" }} key={event.id}>

@@ -23,7 +23,7 @@
 
 .cards-container {
   background-color: rgb(255, 255, 255);
-  padding: 0 2rem 2rem 2rem;
+  padding: 0 2rem 2rem 2rem;  
   max-width: 100%;
   min-width: 100%;
   border: 1px solid #dadada;
@@ -34,9 +34,9 @@
 .plans-grid {
   padding: 0 2rem 0 2rem;
   display: grid;
-  grid-template-columns: repeat(3, 300px);
-  justify-content: space-between;
-  row-gap: 16px;
+  grid-template-columns: repeat(2, 300px);
+  justify-content: space-around;
+  row-gap: 40px;
 }
 
 .plan-card {
@@ -88,7 +88,7 @@
 .plan-details-container {
   background-color: white;
   padding: 20px;
-  margin: 0 auto 0 auto;
+  margin: 0 auto auto auto;
   border-radius: 20px;
   box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
   border: 1px solid #d2d2d2;
@@ -96,7 +96,7 @@
   height: 100%;
 }
 
-.plan-details-container img {
+.plan-details-container-img {
   margin-bottom: 24px;
   width: 100%;
   height: 420px;

@@ -10,30 +10,38 @@ export default function PlansPage({
   willExpand,
 }) {
   return (
-    <>
-      <CardsContainers
-        events={events ? events : []}
-        willExpand={willExpand}
-        title={
-          isHost
-            ? "Your Plans"
-            : isFriends
-            ? "Friends' Plans"
-            : `${hostUsername}'s Plans`
-        }
-        noDataMessage={
-          isHost
-            ? "You have no plans yet."
-            : isFriends
-            ? "Friends has no plans yet."
-            : `${hostUsername} has no plans yet.`
-        }
-      />
+    <div
+      className="row"
+      style={{
+        margin: `${isHost ? "0 -4rem 0 -4rem" : "0"}`,
+      }}
+    >
+      <div className={`col-${isHost ? "8" : "12"}`}>
+        <CardsContainers
+          events={events ? events : []}
+          willExpand={willExpand}
+          title={
+            isHost
+              ? "Your Plans"
+              : isFriends
+              ? "Friends' Plans"
+              : `${hostUsername}'s Plans`
+          }
+          noDataMessage={
+            isHost
+              ? "You have no plans yet."
+              : isFriends
+              ? "Friends has no plans yet."
+              : `${hostUsername} has no plans yet.`
+          }
+        />
+      </div>
+
       {isHost && (
-        <div className="container">
+        <div className="col-4">
           <AddPlanForm events={events} setEvents={setEvents} />
         </div>
       )}
-    </>
+    </div>
   );
 }
