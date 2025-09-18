@@ -15,21 +15,19 @@ export default function Logout({ onConfirm, onCancel }) {
   const modalStyle = {
     backgroundColor: "#fff",
     width: "100%",
-    maxWidth: "420px",
+    maxWidth: "720px",
     borderRadius: "12px",
     boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
     overflow: "hidden",
   };
-
-  const headerStyle = {
-    padding: "16px 20px",
-    borderBottom: "1px solid #eee",
-    fontWeight: 700,
-  };
+  
 
   const bodyStyle = {
     padding: "16px 20px",
     color: "#444",
+    fontSize: "1.2rem",
+    fontWeight: 600,
+    letterSpacing: 0.2,
   };
 
   const footerStyle = {
@@ -38,12 +36,14 @@ export default function Logout({ onConfirm, onCancel }) {
     display: "flex",
     gap: "12px",
     justifyContent: "flex-end",
+    fontWeight: 600,
+    letterSpacing: 0.2,
   };
 
   return (
     <div style={overlayStyle} role="dialog" aria-modal="true">
       <div style={modalStyle}>
-        <div style={headerStyle}>Confirm Logout</div>
+        <div className="header">Confirm Logout</div>
         <div style={bodyStyle}>
           Are you sure you want to log out? You will need to sign in again.
         </div>

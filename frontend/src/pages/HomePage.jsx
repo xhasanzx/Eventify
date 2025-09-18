@@ -4,8 +4,9 @@ export default function HomePage({ username, userEvents, friendsEvents }) {
   return (
     <div>
       <div className="text-center">
-        <h2>Welcome, {username}</h2>
+        <h2 className="header">Welcome, {username}</h2>
       </div>
+      
       <div className="container py-4">
         <CardsContainers
           events={friendsEvents ? friendsEvents : []}

@@ -34,12 +34,11 @@ export default function Navbar() {
       <nav className="navbar navbar-expand-lg navbar-dark shadow-sm">
         <div className="container">
           <Link
-            className="navbar-brand fw-bold"
+            className="navbar-brand  header"
             to="/home"
             style={{
-              fontSize: "28px",
-              fontWeight: 700,
-              letterSpacing: "0.3px",
+              fontSize: "30px",
+              letterSpacing: "1px",
             }}
           >
             Planify
@@ -82,10 +81,11 @@ export default function Navbar() {
 
               <li className="nav-item d-flex align-items-center ms-2">
                 <button
-                  className="btn btn-danger text-white d-flex align-items-center justify-content-center"
+                  className="btn btn-danger text-white d-flex"
                   style={{
-                    height: "40px",
-                    padding: "0 14px",
+                    height: "45px",
+                    alignItems: "center",
+                    justifyContent: "center",
                     fontWeight: 600,
                     borderRadius: "8px",
                   }}
