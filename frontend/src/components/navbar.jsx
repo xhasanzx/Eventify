@@ -31,7 +31,7 @@ export default function Navbar() {
       {showLogout && (
         <Logout onConfirm={handleConfirmLogout} onCancel={handleCancelLogout} />
       )}
-      <nav className="navbar navbar-expand-lg navbar-dark shadow-sm">
+      <nav className="navbar navbar-expand navbar-dark shadow-sm">
         <div className="container">
           <Link
             className="navbar-brand  header"

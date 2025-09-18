@@ -1,6 +1,15 @@
 import API from "../api";
+import { useState } from "react";
 
-export default function AddEventForm({ newEvent, setNewEvent, setEvents }) {
+export default function AddPlanForm({ events, setEvents }) {
+  const [newEvent, setNewEvent] = useState({
+    title: "",
+    description: "",
+    date: "",
+    location: "",
+    image_url: "",
+  });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewEvent((prev) => ({ ...prev, [name]: value }));
@@ -12,7 +21,11 @@ export default function AddEventForm({ newEvent, setNewEvent, setEvents }) {
     API.post("/plan/create/", newEvent)
       .then((res) => {
         alert("Plan successfully created!");
-        setEvents((prev) => [...prev, res.data.plan]);
+        const createdPlan = res.data.plan;        
+        const next = Array.isArray(events)
+          ? [...events, createdPlan]
+          : [createdPlan];
+        setEvents(next);
         setNewEvent({
           title: "",
           description: "",
@@ -30,8 +43,8 @@ export default function AddEventForm({ newEvent, setNewEvent, setEvents }) {
         <div
           className="card"
           style={{
-            padding: "1.5rem",
-            width: "100%",
+            padding: "2rem",
+            width: "80%",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
             borderRadius: "12px",
           }}

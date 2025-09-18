@@ -1,20 +1,24 @@
 import CardsContainers from "../components/CardsContainers";
+import AddPlanForm from "../components/AddPlanForm";
 
 export default function PlansPage({
-  events,    
+  events,
+  setEvents,
   isHost,
   isFriends,
   hostUsername,
+  willExpand,
 }) {
   return (
     <>
       <CardsContainers
         events={events ? events : []}
+        willExpand={willExpand}
         title={
           isHost
             ? "Your Plans"
             : isFriends
-            ? "Friends's Plans"
+            ? "Friends' Plans"
             : `${hostUsername}'s Plans`
         }
         noDataMessage={
@@ -25,6 +29,11 @@ export default function PlansPage({
             : `${hostUsername} has no plans yet.`
         }
       />
+      {isHost && (
+        <div className="container">
+          <AddPlanForm events={events} setEvents={setEvents} />
+        </div>
+      )}
     </>
   );
 }

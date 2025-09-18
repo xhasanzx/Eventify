@@ -12,8 +12,8 @@ from backend.serializers import PlanSerializer
 @permission_classes([IsAuthenticated])
 def create_event(request):    
     try:                        
-        serializer = PlanSerializer(data=request.data, context={'request': request})
-        if serializer.is_valid():
+        serializer = PlanSerializer(data=request.data, context={'request': request})                
+        if serializer.is_valid():            
             serializer.save(host=request.user)
             return Response({
                 "message": "plan created successfully",
@@ -22,7 +22,9 @@ def create_event(request):
         
         return Response(serializer.errors, status=400)
     except Exception as e:
-        return JsonResponse({"error": str(e)}, status=400)
+        return JsonResponse({
+            "error": str(e),
+            "serializer error":serializer.errors}, status=400)
 
 
 @api_view(['GET'])

@@ -103,9 +103,11 @@ function App() {
                 element={
                   <PlansPage
                     events={userEvents}
+                    setEvents={setUserEvents}
                     isHost={true}
                     isFriends={false}
                     hostUsername={username}
+                    willExpand={true}
                   />
                 }
               />
@@ -114,9 +116,11 @@ function App() {
                 element={
                   <PlansPage
                     events={friendsEvents}
+                    setEvents={setFriendsEvents}
                     isHost={false}
                     isFriends={true}
                     hostUsername={"friends"}
+                    willExpand={false}
                   />
                 }
               />
