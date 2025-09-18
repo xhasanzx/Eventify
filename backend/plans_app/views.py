@@ -27,7 +27,6 @@ def create_event(request):
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
-@csrf_exempt
 def get_plan(request, id):    
     try:        
         try:

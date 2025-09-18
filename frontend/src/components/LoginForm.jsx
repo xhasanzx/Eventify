@@ -23,14 +23,14 @@ export default function LoginForm() {
       .then((res) => {
         setTokens(res.data.tokens.access, res.data.tokens.refresh);
         window.dispatchEvent(new Event("loginSuccess"));
-        window.location.href = "/";
+        window.location.href = "/home";
       })
       .catch((err) => {
         console.log(err);
         setError("Invalid credentials. Please try again.");
       })
       .finally(() => {
-        setIsLoading(false);        
+        setIsLoading(false);
       });
   };
 
@@ -55,13 +55,19 @@ export default function LoginForm() {
         }}
       >
         <div className="card-body" style={{ padding: "24px" }}>
-          <h2 className="text-center mb-3">Welcome back</h2>
+          <h2
+            className="text-center mb-3"
+            style={{
+              fontWeight: "800",
+              letterSpacing: 0.2,
+            }}
+          >
+            Sign in to continue
+          </h2>
           <p
             className="text-muted text-center mb-4"
             style={{ fontSize: "22px" }}
-          >
-            Sign in to continue to Planify
-          </p>
+          ></p>
 
           {error && (
             <div className="alert alert-danger py-2" role="alert">
@@ -110,7 +116,16 @@ export default function LoginForm() {
 
             <button
               type="submit"
-              className="btn btn-primary w-100"
+              className="btn w-100"
+              style={{
+                textDecoration: "none",
+                background: "#10b981",
+                color: "white",
+                padding: "10px 16px",
+                borderRadius: "10px",
+                fontWeight: 700,
+                boxShadow: "0 8px 20px rgba(16,185,129,0.25)",
+              }}
               disabled={isLoading}
             >
               {isLoading ? "Signing in..." : "Sign in"}

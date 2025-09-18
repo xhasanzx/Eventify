@@ -16,7 +16,7 @@ export default function Button({ event, setEvents, isDeleting }) {
             prevEvents.filter((event) => event.id !== event.id)
           );
           alert("Plan deleted successfully!");
-          window.location.href = "/";
+          window.location.href = "/home";
           setStatus(false);
         })
         .catch((err) => {

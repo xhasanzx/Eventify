@@ -51,14 +51,12 @@ def signup_view(request):
         data = request.data
         username = data.get('username')
         email = data.get('email')
-        password = data.get('password')        
-        phone = data.get('phone')    
+        password = data.get('password')                
 
         user = User.objects.create_user(
             username=username,
             email=email,
-            password=password,
-            phone=phone,            
+            password=password,            
         )
         user.save()
         tokens = get_tokens_for_user(user)

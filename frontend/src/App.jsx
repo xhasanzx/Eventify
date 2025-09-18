@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import PlanDetailsPage from "./pages/PlanDetailsPage";
 import EditPlanPage from "./pages/EditPlanPage";
 import PlansPage from "./pages/PlansPage";
+import SignupPage from "./pages/SignupPage";
 
 function App() {
   const [username, setUsername] = useState("");
@@ -72,7 +73,7 @@ function App() {
     return (
       <Router>
         <Routes>
-          <Route path="*" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </Router>
     );
@@ -85,8 +86,10 @@ function App() {
           <Navbar />
           <div className="container mt-4">
             <Routes>
+              <Route path="/login" element={<LoginPage />}></Route>
+              <Route path="/signup" element={<SignupPage />}></Route>
               <Route
-                path="/"
+                path="/home"
                 element={
                   <HomePage
                     username={username}

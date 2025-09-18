@@ -3,7 +3,7 @@ import Logout from "./Logout";
 import { useState } from "react";
 
 const navItems = [
-  { path: "/", label: "Home" },
+  { path: "/home", label: "Home" },
   { path: "/your-plans", label: "Your Plans" },
   { path: "/friends", label: "Friends" },
 ];
@@ -31,14 +31,11 @@ export default function Navbar() {
       {showLogout && (
         <Logout onConfirm={handleConfirmLogout} onCancel={handleCancelLogout} />
       )}
-      <nav
-        className="navbar navbar-expand-lg navbar-dark shadow-sm"
-        
-      >
+      <nav className="navbar navbar-expand-lg navbar-dark shadow-sm">
         <div className="container">
           <Link
             className="navbar-brand fw-bold"
-            to="/"
+            to="/home"
             style={{
               fontSize: "28px",
               fontWeight: 700,

@@ -85,7 +85,7 @@ API.interceptors.response.use(
 // Logout function
 const logout = () => {
   clearTokens();
-  window.location.href = "/login";
+  window.location.href = "/";
 };
 
 export default API;

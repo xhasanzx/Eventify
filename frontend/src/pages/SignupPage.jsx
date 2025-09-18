@@ -4,7 +4,6 @@ import API, { setTokens } from "../api";
 export default function SignupPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -44,7 +43,7 @@ export default function SignupPage() {
       .finally(() => {
         setIsLoading(false);
         window.dispatchEvent(new Event("loginSuccess"));
-        window.location.href = "/";
+        window.location.href = "/home";
       });
   };
 
@@ -107,19 +106,6 @@ export default function SignupPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
-                  required
-                />
-              </div>
-
-              <div className="col-12">
-                <label className="form-label">Phone</label>
-                <input
-                  type="tel"
-                  className="form-control"
-                  placeholder="Enter your phone number"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  autoComplete="tel"
                   required
                 />
               </div>
