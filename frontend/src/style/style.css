@@ -4,7 +4,6 @@
 }
 
 .header {
-  padding: 16px 20px;
   font-weight: 800;
   font-size: 2rem;
   letter-spacing: 0.2;
@@ -23,7 +22,8 @@
 
 .cards-container {
   background-color: rgb(255, 255, 255);
-  padding: 0 2rem 2rem 2rem;  
+  padding: 1rem;
+  margin: 0 auto;
   max-width: 100%;
   min-width: 100%;
   border: 1px solid #dadada;
@@ -32,11 +32,15 @@
 }
 
 .plans-grid {
-  padding: 0 2rem 0 2rem;
+  padding: 0 1rem 1rem 1rem;
   display: grid;
   grid-template-columns: repeat(2, 300px);
   justify-content: space-around;
   row-gap: 40px;
+}
+
+.plans-view {
+  padding: 0 1rem 1rem 1rem;
 }
 
 .plan-card {

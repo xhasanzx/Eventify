@@ -10,10 +10,12 @@ export default function CardsContainers({
 }) {
   return (
     <div className="cards-container mb-4">
-      <h2 className="text-center mb-3 header">{title}</h2>
+      <h2 className="text-center header">
+        {title[0].toUpperCase() + title.slice(1)}
+      </h2>
       {events?.length === 0 && (
         <p style={{ fontSize: "28px" }} className="text-center text-muted">
-          {noDataMessage}
+          {noDataMessage[0].toUpperCase() + noDataMessage.slice(1)}
         </p>
       )}
 
@@ -23,7 +25,11 @@ export default function CardsContainers({
           style={{ overflowX: "auto" }}
         >
           {events?.map((event) => (
-            <div style={{ flex: "0 0 auto" }} key={event.id}>
+            <div
+              className="plans-view"
+              style={{ flex: "0 0 auto" }}
+              key={event.id}
+            >
               <PlanCard event={event} />
             </div>
           ))}

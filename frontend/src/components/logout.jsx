@@ -19,11 +19,12 @@ export default function Logout({ onConfirm, onCancel }) {
     borderRadius: "12px",
     boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
     overflow: "hidden",
+    padding: "1rem",
   };
-  
 
   const bodyStyle = {
-    padding: "16px 20px",
+    padding: "1rem",
+    paddingLeft: "0",
     color: "#444",
     fontSize: "1.2rem",
     fontWeight: 600,

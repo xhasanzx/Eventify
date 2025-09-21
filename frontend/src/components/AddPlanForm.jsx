@@ -47,12 +47,7 @@ export default function AddPlanForm({ events, setEvents }) {
         borderRadius: "12px",
       }}
     >
-      <h3
-        className="text-center header"
-        style={{
-          paddingTop: "0",
-        }}
-      >
+      <h3 className="text-center header" style={{ paddingTop: "0" }}>
         Create a new plan
       </h3>
       <div>
@@ -73,12 +68,7 @@ export default function AddPlanForm({ events, setEvents }) {
 
       <form className="row g-3" onSubmit={handleSubmit}>
         <div className="col-md-12">
-          <label
-            className="form-label"
-            style={{
-              paddingTop: "0",
-            }}
-          >
+          <label className="form-label" style={{ paddingTop: "0" }}>
             Name:{" "}
           </label>
           <input

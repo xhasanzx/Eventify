@@ -40,12 +40,17 @@ function App() {
     if (!friends || friends.length === 0) return;
     Promise.all(friends.map((friend) => API.get(`plan/host/${friend}/`)))
       .then((responses) => {
-        const merged = responses.flatMap((r) => r.data || []);
-        setFriendsEvents(merged);
+        const data = responses.map((r, i) => ({
+          id: friends[i], // the friend's id
+          username: r.data[0]?.host_username || "Unknown", // get from event if available
+          plans: r.data || [], // all that friend's events
+        }));
+        setFriendsEvents(data);
       })
       .catch((err) => console.error(err));
   }, [friends]);
 
+  console.log("friendsEvents", friendsEvents);
   const [isLoggedIn, setIsLoggedIn] = useState(
     !!localStorage.getItem("access")
   );
@@ -92,7 +97,6 @@ function App() {
                 path="/home"
                 element={
                   <HomePage
-                    username={username}
                     userEvents={userEvents}
                     friendsEvents={friendsEvents}
                   />
@@ -105,8 +109,7 @@ function App() {
                     events={userEvents}
                     setEvents={setUserEvents}
                     isHost={true}
-                    isFriends={false}
-                    hostUsername={username}
+                    isFriendsPage={false}
                     willExpand={true}
                   />
                 }
@@ -118,8 +121,7 @@ function App() {
                     events={friendsEvents}
                     setEvents={setFriendsEvents}
                     isHost={false}
-                    isFriends={true}
-                    hostUsername={"friends"}
+                    isFriendsPage={true}
                     willExpand={false}
                   />
                 }
