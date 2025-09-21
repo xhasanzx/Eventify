@@ -4,7 +4,9 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):        
     email = models.EmailField(max_length=200, unique=True)    
     is_admin = models.BooleanField(default=False)
-    friends = models.ManyToManyField('self', blank=True, default=[])
+    friends_ids = models.ManyToManyField('self', blank=True, default=[])
+    pending_requests_received = models.ManyToManyField('self', blank=True, default=[])
+    pending_requests_sent = models.ManyToManyField('self', blank=True, default=[])
 
     def __str__(self):
         return self.username

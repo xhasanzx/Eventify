@@ -17,7 +17,7 @@ export default function PlanDetailsPage() {
 
   return (
     <div className="row plan-details-container">
-      <h1 className="mb-4 col-12 plan-details-title">{event?.title}</h1>
+      <h1 className="mb-4 col-12 header">{event?.title}</h1>
       {event?.image_url && (
         <div className=" col-7">
           <img className="plan-details-container-img" src={event?.image_url} />

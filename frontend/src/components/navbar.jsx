@@ -6,6 +6,7 @@ const navItems = [
   { path: "/home", label: "Home" },
   { path: "/your-plans", label: "Your Plans" },
   { path: "/friends", label: "Friends" },
+  { path: "/account", label: "Account" },
 ];
 
 export default function Navbar() {

@@ -109,15 +109,18 @@ def get_user_plans(request):
 @permission_classes([IsAuthenticated])
 def get_user_friends(request):
     user = request.user
-    friends = user.friends.all()
-    
-    if friends.count() == 0:
+    friends_ids = user.friends_ids.all()
+
+    friends_list = [User.objects.get(id=friend.id) for friend in friends_ids]
+    serializer = UserSerializer(friends_list, many=True, context={'request': request})
+
+    if friends_list == []:
         return JsonResponse({
             "error": "you currently have no friends, try adding some."
         }, status=status.HTTP_200_OK)
     else:                
         return JsonResponse({
-            "friends": [friend.id for friend in friends]
+            "friends": serializer.data
         }, status=status.HTTP_200_OK)
     
 
@@ -127,7 +130,87 @@ def add_friend(request):
     user = request.user
     friend_id = request.data.get('friend_id')
     friend = User.objects.get(id=friend_id)
-    user.friends.add(friend)
+
+    user.pending_requests_sent.add(friend)
+    user.save()
+
+    friend.pending_requests_received.add(user)
+    friend.save()
+
     return JsonResponse({
-        "message": "friend added successfully"
+        "message": "friend request sent"
     }, status=status.HTTP_200_OK)
+
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_friend_requests(request):
+    user = request.user
+
+    received_requests = user.pending_requests_received.all()
+    sent_requests = user.pending_requests_sent.all()
+
+    if not received_requests and not sent_requests:
+        return Response(
+            {"message": "You currently have no pending friend requests."},
+            status=status.HTTP_200_OK
+        )    
+    return Response({
+        "received_requests": [
+            {"id": u.id, "username": u.username} for u in received_requests
+        ],
+        "sent_requests": [
+            {"id": u.id, "username": u.username} for u in sent_requests
+        ]
+    }, status=status.HTTP_200_OK)
+    
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def friend_request_response(request):
+    user = request.user    
+    friend_id = request.data.get('friend_id')
+    friend = User.objects.get(id=friend_id)
+    response = request.data.get('response')  # 'accept' or 'decline'
+
+    if response == 'decline':
+        user.pending_requests_received.remove(friend)
+        friend.pending_requests_sent.remove(user)
+        friend.save()
+        user.save()
+        
+        return JsonResponse({
+            "message": "friend request declined"
+        }, status=status.HTTP_200_OK)
+
+    try:    
+        if friend in user.pending_requests_received:
+            user.friends_id.add(friend.id)
+            friend.friends_ids.add(user)
+            user.pending_requests_received.remove(friend)
+            friend.pending_requests_sent.remove(user)
+            user.save()
+            friend.save()
+
+            return JsonResponse({
+                "message": "friend request accepted"
+            }, status=status.HTTP_200_OK)
+        else:
+            return JsonResponse({
+                "error": "no pending friend request from this user"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+    except User.DoesNotExist:
+        return JsonResponse({
+            "error": "user not found"
+        }, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return JsonResponse({
+            "error": str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

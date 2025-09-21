@@ -6,10 +6,14 @@ from . import views
 urlpatterns = [        
     path('login/', views.login_view, name='login'),    
     path('signup/', views.signup_view, name='signup'),
+
     path('account/', views.viewAccount, name='view_account'),    
     path('plans/', views.get_user_plans, name='get_user_plans'),
+
     path('friends/', views.get_user_friends, name='get_user_friends'),
     path('add-friend/', views.add_friend, name='add_friend'),
+    path('friend-requests/', views.get_friend_requests, name='friends_request'),
+
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

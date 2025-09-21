@@ -9,6 +9,7 @@ import PlanDetailsPage from "./pages/PlanDetailsPage";
 import EditPlanPage from "./pages/EditPlanPage";
 import PlansPage from "./pages/PlansPage";
 import SignupPage from "./pages/SignupPage";
+import AccountPage from "./pages/AccountPage";
 
 function App() {
   const [username, setUsername] = useState("");
@@ -16,11 +17,19 @@ function App() {
   const [friends, setFriends] = useState([]);
   const [friendsEvents, setFriendsEvents] = useState([]);
 
+  // Get User Account
+  useEffect(() => {
+    API.get("user/account/")
+      .then((res) => {
+        setUsername(res.data.user.username);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   // Get User Plans
   useEffect(() => {
     API.get("user/plans/")
       .then((res) => {
-        setUsername(res.data.username);
         setUserEvents(res.data.plans);
       })
       .catch((err) => console.error(err));
@@ -30,7 +39,7 @@ function App() {
   useEffect(() => {
     API.get("user/friends/")
       .then((res) => {
-        setFriends(res.data.friends);
+        setFriends(res.data.friends.map((friend) => friend.id));
       })
       .catch((err) => console.error(err));
   }, []);
@@ -50,7 +59,6 @@ function App() {
       .catch((err) => console.error(err));
   }, [friends]);
 
-  console.log("friendsEvents", friendsEvents);
   const [isLoggedIn, setIsLoggedIn] = useState(
     !!localStorage.getItem("access")
   );
@@ -128,6 +136,7 @@ function App() {
               />
               <Route path="/plan/:id" element={<PlanDetailsPage />} />
               <Route path="/plan/:id/edit" element={<EditPlanPage />} />
+              <Route path="/account" element={<AccountPage />} />
             </Routes>
           </div>
         </Router>
