@@ -38,8 +38,7 @@ export default function UserPage({ userId }) {
           setPendingRequest(true);
           setIsFriend(false);
         });
-    }
-    else {
+    } else {
       await API.post(`user/add-friend-request/${id}/`)
         .then(() => {
           setPendingRequest(true);
@@ -51,7 +50,7 @@ export default function UserPage({ userId }) {
           setIsFriend(false);
         });
     }
-  }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("access");
@@ -62,19 +61,20 @@ export default function UserPage({ userId }) {
     const fetchData = async () => {
       try {
         const accountRes = await API.get(`user/account/${id}/`);
-        console.log(accountRes.data);
         setUsername(
           accountRes.data.user.username[0].toUpperCase() +
-          accountRes.data.user.username.slice(1)
+            accountRes.data.user.username.slice(1)
         );
+        const palnsRes = await API.get(`plan/host/${id}/`);
 
-        const palnsRes = await API.get(`plan/host/${id}/`)
-        console.log(palnsRes.data)
         setUserPlans(palnsRes.data);
 
-        if (accountRes.data.user.friends_ids.includes(userId))
+        if (accountRes.data.user.friends_ids.includes(userId)) {
           setIsFriend(true);
-
+        }
+        if (accountRes.data.user.pending_requests_sent.includes(userId)) {
+          setPendingRequest(true);
+        }
       } catch (err) {
         console.error("Error fetching account data:", err);
       }
@@ -101,33 +101,23 @@ export default function UserPage({ userId }) {
           alignContent: "center",
         }}
       >
-        {isFriend &&
-          <button className="btn btn-danger"
-            onClick={handleUnfriend}>
+        {isFriend && (
+          <button className="btn btn-danger" onClick={handleUnfriend}>
             Unfriend
           </button>
-        }
+        )}
 
-        {!isFriend &&
-          (
-            !pendingRequest &&
-            <button className="btn btn-primary"
-              onClick={handleFreindRequest}>
-              Add Friend
-            </button>
-          )
-          ||
-          (
-            pendingRequest &&
+        {(!isFriend && !pendingRequest && (
+          <button className="btn btn-primary" onClick={handleFreindRequest}>
+            Add Friend
+          </button>
+        )) ||
+          (pendingRequest && (
             <button className="btn btn-secondary" onClick={handleFreindRequest}>
               Request Sent
             </button>
-          )
-
-        }
+          ))}
       </div>
-
-
 
       <div className="card-container">
         <CardsContainers

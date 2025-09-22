@@ -4,10 +4,33 @@ import "../style/style.css";
 import { Link } from "react-router-dom";
 
 export default function AccountPage() {
+  const [userId, setUserId] = useState(null);
   const [username, setUsername] = useState("");
   const [friends, setFriends] = useState([]);
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [sentRequests, setSentRequests] = useState([]);
+
+  const handleAcceptRequest = async (id) => {
+    await API.post(`user/accept-friend-request/${id}/`).then(() => {
+      setReceivedRequests(
+        receivedRequests.filter((request) => request.id !== id)
+      );
+    });
+  };
+
+  const handleRejectRequest = async (id) => {
+    await API.post(`user/reject-friend-request/${id}/`).then(() => {
+      setReceivedRequests(
+        receivedRequests.filter((request) => request.id !== id)
+      );
+    });
+  };
+
+  const handleCancelRequest = async (id) => {
+    await API.post(`user/cancel-friend-request/${id}/`).then(() => {
+      setSentRequests(sentRequests.filter((request) => request.id !== id));
+    });
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("access");
@@ -18,6 +41,7 @@ export default function AccountPage() {
     const fetchData = async () => {
       try {
         const accountRes = await API.get("user/account/");
+        setUserId(accountRes.data.user.id);
         setUsername(
           accountRes.data.user.username[0].toUpperCase() +
             accountRes.data.user.username.slice(1)
@@ -28,13 +52,13 @@ export default function AccountPage() {
         ]);
 
         setFriends(friendsRes?.data?.friends ? friendsRes.data.friends : []);
+        setSentRequests(
+          requestsRes?.data?.sent_requests ? requestsRes.data.sent_requests : []
+        );
         setReceivedRequests(
           requestsRes?.data?.received_requests
             ? requestsRes.data.received_requests
             : []
-        );
-        setSentRequests(
-          requestsRes?.data?.sent_requests ? requestsRes.data.sent_requests : []
         );
       } catch (err) {
         console.error("Error fetching account data:", err);
@@ -45,69 +69,107 @@ export default function AccountPage() {
   }, []);
 
   return (
-    <>
-      <div className="account-container">
-        <h1 className="text-center header">{username}'s Account</h1>
+    <div className="row" style={{ gap: "2rem" }}>
+      <h1
+        className="header col-12"
+        style={{ textAlign: "left", marginBottom: "2rem" }}
+      >
+        {username}'s Account
+      </h1>
+      <div className="account-friends-container col-5">
+        <h1 className="header">Account Details</h1>
+        <div className="account-details-list">
+          <p>Username: {username}</p>
+        </div>
+      </div>
+      <div className="account-friends-container  col-5">
+        <h1 className="header">Friends</h1>
+        <div className="account-friends-list row">
+          {friends?.length === 0 && <p>No friends</p>}
 
-        <div className="account-friends-container">
-          <h1 className="header">Friends</h1>
-          <div className="account-friends-list row">
-            {friends?.length === 0 && <p>No friends</p>}
-
-            {friends.map((friend) => (
-              <Link
-                className="col-2 account-friend-list-item"
-                key={friend.id}
-                to={`/account/${friend.id}`}
-                style={{ textDecoration: "none" }}
-              >
-                <p>
-                  {friend.username[0].toUpperCase() + friend.username.slice(1)}
-                </p>
-              </Link>
-            ))}
-          </div>
+          {friends.map((friend) => (
+            <Link
+              className="col-2 "
+              key={friend.id}
+              to={`/account/${friend.id}`}
+              style={{ textDecoration: "none" }}
+            >
+              <p>
+                {friend.username[0].toUpperCase() + friend.username.slice(1)}
+              </p>
+            </Link>
+          ))}
         </div>
       </div>
 
-      {receivedRequests?.length > 0 ||
-        (sentRequests?.length > 0 && (
-          <div className="account-container">
-            <div>
-              <h1 className="header">Friend Requests</h1>
-              <div className="account-requests-container">
-                <h1 className="header">Received</h1>
-                <div className="account-requests-list">
-                  {receivedRequests?.length === 0 && <p>No friend requests</p>}
-                  {receivedRequests?.length > 0 &&
-                    receivedRequests.map((requestedBy) => (
-                      <div
-                        className="account-request-list-item"
-                        key={requestedBy.id}
-                      >
-                        <p>{requestedBy.name}</p>
-                      </div>
-                    ))}
-                </div>
-              </div>
-              <div className="account-requests-container">
-                <h1 className="header">Sent</h1>
-                <div className="account-requests-list">
-                  {sentRequests?.length === 0 && <p>No sent requests</p>}
-                  {sentRequests?.length > 0 &&
-                    sentRequests.map((sentTo) => (
-                      <div
-                        className="account-request-list-item"
-                        key={sentTo.id}
-                      >
-                        <p>{sentTo.name}</p>
-                      </div>
-                    ))}
-                </div>
-              </div>
+      <div className="account-requests-container col-5">
+        <h1 className="header">Received</h1>
+        <div className="account-requests-list">
+          {receivedRequests?.length == 0 && <p>No friend requests</p>}
+          {receivedRequests.map((requestedBy) => (
+            <div className="account-request-list-item" key={requestedBy.id}>
+              <Link
+                className="account-request-list-item d-flex"
+                to={`/account/${requestedBy.id}`}
+                style={{ textDecoration: "none" }}
+              >
+                <p>
+                  {requestedBy.username[0].toUpperCase() +
+                    requestedBy.username.slice(1)}
+                </p>
+              </Link>
+              <button
+                className="btn btn-primary"
+                onClick={(e) => {
+                  e.preventDefault();
+
+                  handleAcceptRequest(requestedBy.id);
+                }}
+              >
+                Accept
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleRejectRequest(requestedBy.id);
+                }}
+              >
+                Reject
+              </button>
             </div>
-          </div>
-        ))}
-    </>
+          ))}
+        </div>
+      </div>
+
+      <div className="account-requests-container col-5">
+        <h1 className="header">Sent</h1>
+        <div className="account-requests-list">
+          {sentRequests?.length == 0 && <p>No sent requests</p>}
+          {sentRequests?.map((sentTo) => (
+            <div className="account-request-list-item" key={sentTo.id}>
+              <Link
+                className="account-request-list-item"
+                to={`/account/${sentTo.id}`}
+                style={{ textDecoration: "none" }}
+              >
+                <p>
+                  {sentTo.username[0].toUpperCase() + sentTo.username.slice(1)}
+                </p>
+              </Link>
+              <button
+                className="btn btn-danger"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleCancelRequest(sentTo.id);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

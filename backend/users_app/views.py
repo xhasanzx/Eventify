@@ -230,3 +230,47 @@ def get_friend_requests(request):
         ]
     }, status=status.HTTP_200_OK)
     
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def accept_friend_request(request, id):
+    try:
+        user = request.user
+        friend = User.objects.get(id=id)
+        
+        user.pending_requests_received.remove(friend)
+        friend.pending_requests_sent.remove(user)
+
+        user.friends_ids.add(friend)
+        friend.friends_ids.add(user)
+
+        return JsonResponse({
+                "message": "friend request accepted"
+            }, status=status.HTTP_200_OK)   
+    
+    except Exception as e:
+            return JsonResponse({
+                'error': str(e)
+            }, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def reject_friend_request(request, id):
+    try:
+        user = request.user
+        friend = User.objects.get(id=id)
+        
+        user.pending_requests_received.remove(friend)
+        friend.pending_requests_sent.remove(user)    
+
+        return JsonResponse({
+                "message": "friend request rejected"
+            }, status=status.HTTP_200_OK) 
+    
+    except Exception as e:
+        return JsonResponse({
+            'error': str(e)
+        }, status=status.HTTP_400_BAD_REQUEST)

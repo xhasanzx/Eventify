@@ -42,7 +42,7 @@ function App() {
   useEffect(() => {
     API.get("user/friends/")
       .then((res) => {
-        setFriends(res.data.friends.map((friend) => friend.id));
+        setFriends(res?.data?.friends?.map((friend) => friend.id));
       })
       .catch((err) => console.error(err));
   }, []);
