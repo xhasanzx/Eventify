@@ -64,9 +64,9 @@ def delete_Plan(request, id):
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
-def get_host_plan(request, host):
+def get_host_plan(request, id):
     try:        
-        plans = Plan.objects.filter(is_active=True, host=host) 
+        plans = Plan.objects.filter(is_active=True, host=id) 
         serializer = PlanSerializer(plans, many=True, context={'request': request})
         return JsonResponse(serializer.data, safe=False, status=200)
     except Exception as e:

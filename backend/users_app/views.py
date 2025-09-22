@@ -86,6 +86,21 @@ def viewAccount(request):
             "error": "user not found"
         }, status=status.HTTP_404_NOT_FOUND)
 
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def veiwUserAccount(request, id):
+    try:
+        user = User.objects.get(id=id)
+        serializer = UserSerializer(user, context={'request': request})    
+        
+        return JsonResponse({
+            "user": serializer.data
+        }, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return JsonResponse({
+            "error": "user not found"
+        }, status=status.HTTP_404_NOT_FOUND)
+    
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -126,10 +141,9 @@ def get_user_friends(request):
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def add_friend(request):
-    user = request.user
-    friend_id = request.data.get('friend_id')
-    friend = User.objects.get(id=friend_id)
+def add_friend_request(request, id):
+    user = request.user    
+    friend = User.objects.get(id=id)
 
     user.pending_requests_sent.add(friend)
     user.save()
@@ -142,10 +156,57 @@ def add_friend(request):
     }, status=status.HTTP_200_OK)
 
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def cancel_friend_request(request, id):
+    user = request.user    
+    friend = User.objects.get(id=id)
+
+    if friend in user.pending_requests_sent.all():
+        user.pending_requests_sent.remove(friend)
+        user.save()
+
+        friend.pending_requests_received.remove(user)
+        friend.save()
+
+        return JsonResponse({
+            "message": "friend request removed"
+        }, status=status.HTTP_200_OK)
+    else:
+        return JsonResponse({
+            "error": "no pending friend request to this user"
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def unfriend_user(request, id):
+    user = request.user
+    try:
+        friend = User.objects.get(id=id)
+        
+        if friend in user.friends_ids.all():
+            user.friends_ids.remove(friend)
+            friend.friends_ids.remove(user)
+            user.save()
+            friend.save()
+
+            return JsonResponse({
+                "message": "unfriended successfully"
+            }, status=status.HTTP_200_OK)
+        else:
+            return JsonResponse({
+                "error": "this user is not in your friends list"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+    except User.DoesNotExist:
+        return JsonResponse({
+            "error": "user not found"
+        }, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return JsonResponse({
+            "error": str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -169,48 +230,3 @@ def get_friend_requests(request):
         ]
     }, status=status.HTTP_200_OK)
     
-
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def friend_request_response(request):
-    user = request.user    
-    friend_id = request.data.get('friend_id')
-    friend = User.objects.get(id=friend_id)
-    response = request.data.get('response')  # 'accept' or 'decline'
-
-    if response == 'decline':
-        user.pending_requests_received.remove(friend)
-        friend.pending_requests_sent.remove(user)
-        friend.save()
-        user.save()
-        
-        return JsonResponse({
-            "message": "friend request declined"
-        }, status=status.HTTP_200_OK)
-
-    try:    
-        if friend in user.pending_requests_received:
-            user.friends_id.add(friend.id)
-            friend.friends_ids.add(user)
-            user.pending_requests_received.remove(friend)
-            friend.pending_requests_sent.remove(user)
-            user.save()
-            friend.save()
-
-            return JsonResponse({
-                "message": "friend request accepted"
-            }, status=status.HTTP_200_OK)
-        else:
-            return JsonResponse({
-                "error": "no pending friend request from this user"
-            }, status=status.HTTP_400_BAD_REQUEST)
-        
-    except User.DoesNotExist:
-        return JsonResponse({
-            "error": "user not found"
-        }, status=status.HTTP_404_NOT_FOUND)
-    except Exception as e:
-        return JsonResponse({
-            "error": str(e)
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-

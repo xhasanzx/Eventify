@@ -10,9 +10,11 @@ import EditPlanPage from "./pages/EditPlanPage";
 import PlansPage from "./pages/PlansPage";
 import SignupPage from "./pages/SignupPage";
 import AccountPage from "./pages/AccountPage";
+import UserPage from "./pages/UserPage";
 
 function App() {
   const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState(null);
   const [userEvents, setUserEvents] = useState([]);
   const [friends, setFriends] = useState([]);
   const [friendsEvents, setFriendsEvents] = useState([]);
@@ -22,6 +24,7 @@ function App() {
     API.get("user/account/")
       .then((res) => {
         setUsername(res.data.user.username);
+        setUserId(res.data.user.id);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -137,6 +140,12 @@ function App() {
               <Route path="/plan/:id" element={<PlanDetailsPage />} />
               <Route path="/plan/:id/edit" element={<EditPlanPage />} />
               <Route path="/account" element={<AccountPage />} />
+              <Route
+                path="/account/:id"
+                element={
+                  <UserPage userId={userId} friendsEvents={friendsEvents} />
+                }
+              />
             </Routes>
           </div>
         </Router>
