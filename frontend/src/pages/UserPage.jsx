@@ -8,6 +8,7 @@ export default function UserPage({ userId }) {
   const [username, setUsername] = useState("");
   const [userPlans, setUserPlans] = useState([]);
   const [isFriend, setIsFriend] = useState(false);
+  const [sentRequests, setSentRequests] = useState([]);
   const [pendingRequest, setPendingRequest] = useState(false);
   const params = useParams();
   const id = params.id;
@@ -39,7 +40,7 @@ export default function UserPage({ userId }) {
           setIsFriend(false);
         });
     } else {
-      await API.post(`user/add-friend-request/${id}/`)
+      await API.post(`user/send-friend-request/${id}/`)
         .then(() => {
           setPendingRequest(true);
           setIsFriend(false);
@@ -65,15 +66,26 @@ export default function UserPage({ userId }) {
           accountRes.data.user.username[0].toUpperCase() +
             accountRes.data.user.username.slice(1)
         );
+
         const palnsRes = await API.get(`plan/host/${id}/`);
 
         setUserPlans(palnsRes.data);
 
-        if (accountRes.data.user.friends_ids.includes(userId)) {
+        if (accountRes.data.user.friends.includes(userId)) {
           setIsFriend(true);
+          setPendingRequest(false);
         }
-        if (accountRes.data.user.pending_requests_sent.includes(userId)) {
+
+        const requestsRes = await API.get(`user/friend-requests/`);
+        setSentRequests(requestsRes.data.sent_requests);
+
+        if (
+          sentRequests?.length > 0 &&
+          sentRequests?.map((request) => request.to_user_id == id)
+        ) {
           setPendingRequest(true);
+        } else {
+          setPendingRequest(false);
         }
       } catch (err) {
         console.error("Error fetching account data:", err);
@@ -81,7 +93,7 @@ export default function UserPage({ userId }) {
     };
     fetchData();
     return () => controller.abort();
-  }, []);
+  }, [id]);
 
   return (
     <div className="account-container">

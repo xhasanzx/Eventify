@@ -123,14 +123,14 @@ def get_user_plans(request):
 @permission_classes([IsAuthenticated])
 def get_user_friends(request):
     user = request.user
-    friends_ids = user.friends_ids.all()
+    friends_ids = user.friends.all()
 
     friends_list = [User.objects.get(id=friend.id) for friend in friends_ids]
     serializer = UserSerializer(friends_list, many=True, context={'request': request})
 
     if friends_list == []:
         return JsonResponse({
-            "error": "you currently have no friends, try adding some."
+            "friends": []
         }, status=status.HTTP_200_OK)
     else:                
         return JsonResponse({
@@ -153,16 +153,16 @@ def get_friend_requests(request):
         print("No sent requests")    
         sent_requests = []
 
-    if not received_requests and not sent_requests:
-        return JsonResponse(
-            {"message": "You currently have no pending friend requests."},
-            status=status.HTTP_200_OK
+    if len(received_requests) == 0 and len(sent_requests) == 0:
+        return JsonResponse({
+            "received_requests": [],
+            "sent_requests": []}
         )    
     return JsonResponse({
         "received_requests": [
             {
-                "id": received.to, 
-                "from":received.from_user.username,
+                "id": received.id, 
+                "from_user":received.from_user.username,
                 "from_user_id":received.from_user.id
             } for received in received_requests
         ],
@@ -252,9 +252,9 @@ def accept_friend_request(request, from_user_id):
 
         from_user.save()
         user.save()
-
+        serializer = UserSerializer(from_user)
         return JsonResponse({
-                "message": "friend request accepted"
+                "friend": serializer.data
             }, status=status.HTTP_200_OK)   
     
     except Exception as e:

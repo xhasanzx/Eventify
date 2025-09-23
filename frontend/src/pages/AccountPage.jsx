@@ -10,9 +10,10 @@ export default function AccountPage() {
   const [sentRequests, setSentRequests] = useState([]);
 
   const handleAcceptRequest = async (id) => {
-    await API.post(`user/accept-friend-request/${id}/`).then(() => {
+    await API.post(`user/accept-friend-request/${id}/`).then((res) => {
+      setFriends([...friends, res.data.friend]);
       setReceivedRequests(
-        receivedRequests.filter((request) => request.id !== id)
+        receivedRequests.filter((request) => request.from_user_id !== id)
       );
     });
   };
@@ -20,14 +21,16 @@ export default function AccountPage() {
   const handleRejectRequest = async (id) => {
     await API.post(`user/reject-friend-request/${id}/`).then(() => {
       setReceivedRequests(
-        receivedRequests.filter((request) => request.id !== id)
+        receivedRequests.filter((request) => request.from_user_id !== id)
       );
     });
   };
 
   const handleCancelRequest = async (id) => {
     await API.post(`user/cancel-friend-request/${id}/`).then(() => {
-      setSentRequests(sentRequests.filter((request) => request.id !== id));
+      setSentRequests(
+        sentRequests.filter((request) => request.to_user_id !== id)
+      );
     });
   };
 
@@ -47,17 +50,10 @@ export default function AccountPage() {
         const [friendsRes, requestsRes] = await Promise.all([
           API.get("user/friends/"),
           API.get("user/friend-requests/"),
-        ]);
-
-        setFriends(friendsRes?.data?.friends ? friendsRes.data.friends : []);
-        setSentRequests(
-          requestsRes?.data?.sent_requests ? requestsRes.data.sent_requests : []
-        );
-        setReceivedRequests(
-          requestsRes?.data?.received_requests
-            ? requestsRes.data.received_requests
-            : []
-        );
+        ]);        
+        setFriends(friendsRes.data.friends);
+        setSentRequests(requestsRes.data.sent_requests);
+        setReceivedRequests(requestsRes.data.received_requests);
       } catch (err) {
         console.error("Error fetching account data:", err);
       }
@@ -83,9 +79,9 @@ export default function AccountPage() {
       <div className="account-friends-container  col-5">
         <h1 className="header">Friends</h1>
         <div className="account-friends-list row">
-          {friends?.length === 0 && <p>No friends</p>}
+          {friends?.length == 0 && <p>No friends</p>}
 
-          {friends.map((friend) => (
+          {friends?.map((friend) => (
             <Link
               className="col-2 "
               key={friend.id}
@@ -93,7 +89,7 @@ export default function AccountPage() {
               style={{ textDecoration: "none" }}
             >
               <p>
-                {friend.username[0].toUpperCase() + friend.username.slice(1)}
+                {friend?.username[0].toUpperCase() + friend?.username.slice(1)}
               </p>
             </Link>
           ))}
@@ -104,24 +100,24 @@ export default function AccountPage() {
         <h1 className="header">Received</h1>
         <div className="account-requests-list">
           {receivedRequests?.length == 0 && <p>No friend requests</p>}
-          {receivedRequests.map((requestedBy) => (
+
+          {receivedRequests?.map((requestedBy) => (
             <div className="account-request-list-item" key={requestedBy.id}>
               <Link
                 className="account-request-list-item d-flex"
-                to={`/account/${requestedBy.id}`}
+                to={`/account/${requestedBy.from_user_id}`}
                 style={{ textDecoration: "none" }}
               >
                 <p>
-                  {requestedBy.username[0].toUpperCase() +
-                    requestedBy.username.slice(1)}
+                  {requestedBy.from_user[0].toUpperCase() +
+                    requestedBy.from_user.slice(1)}
                 </p>
               </Link>
               <button
                 className="btn btn-primary"
                 onClick={(e) => {
                   e.preventDefault();
-
-                  handleAcceptRequest(requestedBy.id);
+                  handleAcceptRequest(requestedBy.from_user_id);
                 }}
               >
                 Accept
@@ -130,7 +126,7 @@ export default function AccountPage() {
                 className="btn btn-danger"
                 onClick={(e) => {
                   e.preventDefault();
-                  handleRejectRequest(requestedBy.id);
+                  handleRejectRequest(requestedBy.from_user_id);
                 }}
               >
                 Reject
@@ -148,18 +144,18 @@ export default function AccountPage() {
             <div className="account-request-list-item" key={sentTo.id}>
               <Link
                 className="account-request-list-item"
-                to={`/account/${sentTo.id}`}
+                to={`/account/${sentTo.to_user_id}`}
                 style={{ textDecoration: "none" }}
               >
                 <p>
-                  {sentTo.username[0].toUpperCase() + sentTo.username.slice(1)}
+                  {sentTo?.to_user[0].toUpperCase() + sentTo?.to_user.slice(1)}
                 </p>
               </Link>
               <button
                 className="btn btn-danger"
                 onClick={(e) => {
                   e.preventDefault();
-                  handleCancelRequest(sentTo.id);
+                  handleCancelRequest(sentTo.to_user_id);
                 }}
               >
                 Cancel

@@ -15,6 +15,7 @@ const setTokens = (access, refresh) => {
   localStorage.setItem("access", access);
   if (refresh) localStorage.setItem("refresh", refresh);
 };
+
 const clearTokens = () => {
   localStorage.removeItem("access");
   localStorage.removeItem("refresh");

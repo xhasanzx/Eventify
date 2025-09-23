@@ -22,8 +22,7 @@ export default function Navbar() {
   }
 
   function handleConfirmLogout() {
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
+    localStorage.clear();
     window.location.href = "/login";
   }
 
@@ -40,11 +39,11 @@ export default function Navbar() {
             style={{
               color: "whitesmoke",
               fontSize: "35px",
-              letterSpacing: "-2px",              
+              letterSpacing: "-2px",
             }}
           >
             SUHBA
-          </Link>         
+          </Link>
 
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">

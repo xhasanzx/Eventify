@@ -13,7 +13,6 @@ import AccountPage from "./pages/AccountPage";
 import UserPage from "./pages/UserPage";
 
 function App() {
-  const [username, setUsername] = useState("");
   const [userId, setUserId] = useState(null);
   const [userEvents, setUserEvents] = useState([]);
   const [friends, setFriends] = useState([]);
@@ -23,7 +22,6 @@ function App() {
   useEffect(() => {
     API.get("user/account/")
       .then((res) => {
-        setUsername(res.data.user.username);
         setUserId(res.data.user.id);
       })
       .catch((err) => console.error(err));
@@ -104,6 +102,17 @@ function App() {
             <Routes>
               <Route path="/login" element={<LoginPage />}></Route>
               <Route path="/signup" element={<SignupPage />}></Route>
+              {isLoggedIn && (
+                <Route
+                  path="/"
+                  element={
+                    <HomePage
+                      userEvents={userEvents}
+                      friendsEvents={friendsEvents}
+                    />
+                  }
+                />
+              )}
               <Route
                 path="/home"
                 element={
