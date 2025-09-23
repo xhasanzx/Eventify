@@ -60,7 +60,7 @@ export default function LoginPage() {
               color: "transparent",
             }}
           >
-            Planify
+            SUHBA
           </span>
         </h1>
         <div
@@ -106,14 +106,16 @@ export default function LoginPage() {
               </span>
               Smart reminders so no one forgets
             </li>
-          </ul>         
-        </div>        
+          </ul>
+        </div>
       </div>
 
-      <div className="col-5"
-      style={{
-        padding: "0 50px 0 0",
-      }}>
+      <div
+        className="col-5"
+        style={{
+          padding: "0 50px 0 0",
+        }}
+      >
         <LoginForm />
       </div>
     </div>

@@ -1,19 +1,18 @@
 from django.contrib.auth import authenticate, login as auth_login
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from django.http import JsonResponse
 from django.db import IntegrityError
 from rest_framework import status
 
-from .models import User
+from .models import User, FriendRequest
 from plans_app.models import Plan
-from backend.serializers import UserSerializer, PlanSerializer
+from backend.serializers import UserSerializer, PlanSerializer, FriendRequestSerializer
 
 
-@csrf_exempt
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
     return {
@@ -100,7 +99,7 @@ def veiwUserAccount(request, id):
         return JsonResponse({
             "error": "user not found"
         }, status=status.HTTP_404_NOT_FOUND)
-    
+
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -118,7 +117,7 @@ def get_user_plans(request):
             "username": user.username.capitalize(),
             "plans": serializer.data
         }, status=status.HTTP_200_OK)
-    
+
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -137,57 +136,88 @@ def get_user_friends(request):
         return JsonResponse({
             "friends": serializer.data
         }, status=status.HTTP_200_OK)
-    
 
-@api_view(["POST"])
+
+@api_view(["GET"])
 @permission_classes([IsAuthenticated])
-def add_friend_request(request, id):
-    user = request.user    
-    friend = User.objects.get(id=id)
+def get_friend_requests(request):
+    try:
+        received_requests = get_list_or_404(FriendRequest, to_user=request.user)
+    except:
+        print("No recieved requests")    
+        received_requests = []
+    
+    try:        
+        sent_requests = get_list_or_404(FriendRequest, from_user=request.user)
+    except:
+        print("No sent requests")    
+        sent_requests = []
 
-    user.pending_requests_sent.add(friend)
-    user.save()
-
-    friend.pending_requests_received.add(user)
-    friend.save()
-
+    if not received_requests and not sent_requests:
+        return JsonResponse(
+            {"message": "You currently have no pending friend requests."},
+            status=status.HTTP_200_OK
+        )    
     return JsonResponse({
-        "message": "friend request sent"
+        "received_requests": [
+            {
+                "id": received.to, 
+                "from":received.from_user.username,
+                "from_user_id":received.from_user.id
+            } for received in received_requests
+        ],
+        "sent_requests": [
+            {
+                "id": sent.id, 
+                "to_user":sent.to_user.username, 
+                "to_user_id":sent.to_user.id
+            } for sent in sent_requests
+        ]
     }, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def cancel_friend_request(request, id):
-    user = request.user    
-    friend = User.objects.get(id=id)
+def send_friend_request(request, to_user_id):        
+    to_user = get_object_or_404(User, id=to_user_id)    
 
-    if friend in user.pending_requests_sent.all():
-        user.pending_requests_sent.remove(friend)
-        user.save()
+    friend_request, created = FriendRequest.objects.get_or_create(
+        from_user=request.user,
+        to_user=to_user
+    )
+    if not created:
+        return Response({"error": "Friend request already sent."}, status=400)
 
-        friend.pending_requests_received.remove(user)
-        friend.save()
-
-        return JsonResponse({
-            "message": "friend request removed"
-        }, status=status.HTTP_200_OK)
-    else:
-        return JsonResponse({
-            "error": "no pending friend request to this user"
-        }, status=status.HTTP_400_BAD_REQUEST)
+    serializer = FriendRequestSerializer(friend_request)
+    return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def unfriend_user(request, id):
+def cancel_friend_request(request, to_user_id):    
+    to_user = get_object_or_404(User, id=to_user_id)
+    friend_request = get_object_or_404(
+        FriendRequest,
+        to_user=to_user, 
+        from_user=request.user)
+    
+    friend_request.delete()
+
+    return JsonResponse({
+        "message": "friend request cancelled"
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def unfriend_user(request, friend_id):
     user = request.user
     try:
-        friend = User.objects.get(id=id)
+        friend = get_object_or_404(User, id=friend_id)
         
-        if friend in user.friends_ids.all():
-            user.friends_ids.remove(friend)
-            friend.friends_ids.remove(user)
+        if friend in user.friends.all():
+            user.friends.remove(friend)
+            friend.friends.remove(user)
             user.save()
             friend.save()
 
@@ -197,53 +227,31 @@ def unfriend_user(request, id):
         else:
             return JsonResponse({
                 "error": "this user is not in your friends list"
-            }, status=status.HTTP_400_BAD_REQUEST)
-        
-    except User.DoesNotExist:
-        return JsonResponse({
-            "error": "user not found"
-        }, status=status.HTTP_404_NOT_FOUND)
+            }, status=status.HTTP_400_BAD_REQUEST)      
     except Exception as e:
         return JsonResponse({
             "error": str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def get_friend_requests(request):
-    user = request.user
-
-    received_requests = user.pending_requests_received.all()
-    sent_requests = user.pending_requests_sent.all()
-
-    if not received_requests and not sent_requests:
-        return Response(
-            {"message": "You currently have no pending friend requests."},
-            status=status.HTTP_200_OK
-        )    
-    return Response({
-        "received_requests": [
-            {"id": u.id, "username": u.username} for u in received_requests
-        ],
-        "sent_requests": [
-            {"id": u.id, "username": u.username} for u in sent_requests
-        ]
-    }, status=status.HTTP_200_OK)
-    
-
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def accept_friend_request(request, id):
-    try:
-        user = request.user
-        friend = User.objects.get(id=id)
+def accept_friend_request(request, from_user_id):
+    user = request.user
+    try:        
+        from_user = get_object_or_404(User, id=from_user_id)
+        friend_request = get_object_or_404(
+            FriendRequest, 
+            to_user=user, 
+            from_user=from_user)
         
-        user.pending_requests_received.remove(friend)
-        friend.pending_requests_sent.remove(user)
+        friend_request.delete()
 
-        user.friends_ids.add(friend)
-        friend.friends_ids.add(user)
+        from_user.friends.add(request.user)
+        user.friends.add(from_user)
+
+        from_user.save()
+        user.save()
 
         return JsonResponse({
                 "message": "friend request accepted"
@@ -253,24 +261,21 @@ def accept_friend_request(request, id):
             return JsonResponse({
                 'error': str(e)
             }, status=status.HTTP_400_BAD_REQUEST)
-    
 
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def reject_friend_request(request, id):
-    try:
-        user = request.user
-        friend = User.objects.get(id=id)
-        
-        user.pending_requests_received.remove(friend)
-        friend.pending_requests_sent.remove(user)    
-
-        return JsonResponse({
-                "message": "friend request rejected"
-            }, status=status.HTTP_200_OK) 
+def reject_friend_request(request, from_user_id):    
+    from_user = get_object_or_404(User, id=from_user_id)
     
-    except Exception as e:
-        return JsonResponse({
-            'error': str(e)
-        }, status=status.HTTP_400_BAD_REQUEST)
+    friend_request = get_object_or_404(
+        FriendRequest,
+        from_user=from_user,
+        to_user=request.user
+    )
+
+    friend_request.delete()
+
+    return JsonResponse({
+            "message": "friend request rejected"
+        }, status=status.HTTP_200_OK) 

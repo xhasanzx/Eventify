@@ -13,13 +13,13 @@ urlpatterns = [
 
     path('friends/', views.get_user_friends, name='get_user_friends'),
     path('friend-requests/', views.get_friend_requests, name='friends_request'),
-    path('unfriend/<int:id>/', views.unfriend_user, name='unfriend'),
+    path('unfriend/<int:friend_id>/', views.unfriend_user, name='unfriend'),
 
-    path('add-friend-request/<int:id>/', views.add_friend_request, name='add_friend'),
-    path('cancel-friend-request/<int:id>/', views.cancel_friend_request, name='remove_friend'),    
+    path('send-friend-request/<int:to_user_id>/', views.send_friend_request, name='add_friend'),
+    path('cancel-friend-request/<int:to_user_id>/', views.cancel_friend_request, name='remove_friend'),    
     
-    path('accept-friend-request/<int:id>/', views.accept_friend_request, name='accept_request'),
-    path('reject-friend-request/<int:id>/', views.reject_friend_request, name='reject_request'),    
+    path('accept-friend-request/<int:from_user_id>/', views.accept_friend_request, name='accept_request'),
+    path('reject-friend-request/<int:from_user_id>/', views.reject_friend_request, name='reject_request'),    
 
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

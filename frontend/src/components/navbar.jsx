@@ -35,27 +35,16 @@ export default function Navbar() {
       <nav className="navbar navbar-expand navbar-dark shadow-sm">
         <div className="container">
           <Link
-            className="navbar-brand  header"
+            className="nav-item header"
             to="/home"
             style={{
-              fontSize: "30px",
-              letterSpacing: "1px",
+              color: "whitesmoke",
+              fontSize: "35px",
+              letterSpacing: "-2px",              
             }}
           >
-            Planify
-          </Link>
-
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
+            SUHBA
+          </Link>         
 
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">

@@ -4,7 +4,6 @@ import "../style/style.css";
 import { Link } from "react-router-dom";
 
 export default function AccountPage() {
-  const [userId, setUserId] = useState(null);
   const [username, setUsername] = useState("");
   const [friends, setFriends] = useState([]);
   const [receivedRequests, setReceivedRequests] = useState([]);
@@ -41,7 +40,6 @@ export default function AccountPage() {
     const fetchData = async () => {
       try {
         const accountRes = await API.get("user/account/");
-        setUserId(accountRes.data.user.id);
         setUsername(
           accountRes.data.user.username[0].toUpperCase() +
             accountRes.data.user.username.slice(1)
