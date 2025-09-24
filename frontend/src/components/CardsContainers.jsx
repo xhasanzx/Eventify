@@ -22,7 +22,7 @@ export default function CardsContainers({
             className={`plans-view ${isHost ? "plans-grid col-6" : "col-4"}`}
             key={plan.id}
           >
-            <PlanCard event={plan} />
+            <PlanCard plan={plan} />
           </div>
         ))}
       </div>
