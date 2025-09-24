@@ -37,7 +37,7 @@ export default function Navbar() {
             className="nav-item header"
             to="/home"
             style={{
-              color: "whitesmoke",
+              color: "#10b981",
               fontSize: "35px",
               letterSpacing: "-2px",
             }}
@@ -55,10 +55,12 @@ export default function Navbar() {
                     }`}
                     style={{
                       borderRadius: "8px",
-                      color: "#fff",
+                      color: location.pathname === item.path
+                      ?"#10b981"
+                      :"rgb(86, 86, 86)",
                       backgroundColor:
                         location.pathname === item.path
-                          ? "rgba(255,255,255,0.15)"
+                          ? "rgba(62, 81, 75, 0.15)"
                           : "transparent",
                     }}
                     to={item.path}

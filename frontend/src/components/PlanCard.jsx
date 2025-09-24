@@ -26,7 +26,7 @@ export default function PlanCard({ event }) {
           <p className="plan-card-text mb-1">{event?.description}</p>
 
           {!event?.is_host && (
-            <p className="plan-card-text mb-1">host: {event?.host_username}</p>
+            <p className="plan-card-text mb-1">Host: {event?.host_username}</p>
           )}
         </div>
       </div>

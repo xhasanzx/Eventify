@@ -73,7 +73,7 @@ def signup_view(request):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-def viewAccount(request):
+def view_account(request):
     try:
         user = UserSerializer(request.user)    
         
@@ -85,9 +85,10 @@ def viewAccount(request):
             "error": "user not found"
         }, status=status.HTTP_404_NOT_FOUND)
 
+
 @api_view(["GET"])
 @permission_classes([AllowAny])
-def veiwUserAccount(request, id):
+def view_user_account(request, id):
     try:
         user = User.objects.get(id=id)
         serializer = UserSerializer(user, context={'request': request})    

@@ -1,8 +1,8 @@
 import API from "../api";
 import { useState } from "react";
 
-export default function AddPlanForm({ events, setEvents }) {
-  const [newEvent, setNewEvent] = useState({
+export default function AddPlanForm({ plans, setPlans }) {
+  const [newPlan, setNewPlan] = useState({
     title: "",
     description: "",
     date: "",
@@ -12,21 +12,21 @@ export default function AddPlanForm({ events, setEvents }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setNewEvent((prev) => ({ ...prev, [name]: value }));
+    setNewPlan((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    API.post("/plan/create/", newEvent)
+    API.post("/plan/create/", newPlan)
       .then((res) => {
         alert("Plan successfully created!");
         const createdPlan = res.data.plan;
-        const next = Array.isArray(events)
-          ? [...events, createdPlan]
+        const next = Array.isArray(plans)
+          ? [...plans, createdPlan]
           : [createdPlan];
-        setEvents(next);
-        setNewEvent({
+        setPlans(next);
+        setNewPlan({
           title: "",
           description: "",
           date: "",
@@ -41,19 +41,17 @@ export default function AddPlanForm({ events, setEvents }) {
     <div
       className="card"
       style={{
-        padding: "1.5rem",
+        padding: "1rem",
         width: "100%",
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
         borderRadius: "12px",
       }}
     >
-      <h3 className="text-center header" style={{ paddingTop: "0" }}>
-        Create a new plan
-      </h3>
+      <h3 className="text-center header">Create a new plan</h3>
       <div>
-        {newEvent.image_url && (
+        {newPlan.image_url && (
           <img
-            src={newEvent.image_url}
+            src={newPlan.image_url}
             alt="Plan preview"
             style={{
               width: "100%",
@@ -68,14 +66,12 @@ export default function AddPlanForm({ events, setEvents }) {
 
       <form className="row g-3" onSubmit={handleSubmit}>
         <div className="col-md-12">
-          <label className="form-label" style={{ paddingTop: "0" }}>
-            Name:{" "}
-          </label>
+          <label className="form-label">Name: </label>
           <input
             type="text"
             className="form-control"
             name="title"
-            value={newEvent.title}
+            value={newPlan.title}
             onChange={handleChange}
           />
         </div>
@@ -86,7 +82,7 @@ export default function AddPlanForm({ events, setEvents }) {
             type="text"
             className="form-control"
             name="location"
-            value={newEvent.location}
+            value={newPlan.location}
             onChange={handleChange}
           />
         </div>
@@ -97,7 +93,7 @@ export default function AddPlanForm({ events, setEvents }) {
             type="date"
             className="form-control"
             name="date"
-            value={newEvent.date}
+            value={newPlan.date}
             onChange={handleChange}
           />
         </div>
@@ -108,7 +104,7 @@ export default function AddPlanForm({ events, setEvents }) {
             type="text"
             className="form-control"
             name="description"
-            value={newEvent.description}
+            value={newPlan.description}
             onChange={handleChange}
           />
         </div>
@@ -119,7 +115,7 @@ export default function AddPlanForm({ events, setEvents }) {
             type="text"
             className="form-control"
             name="image_url"
-            value={newEvent.image_url}
+            value={newPlan.image_url}
             onChange={handleChange}
           />
         </div>

@@ -14,9 +14,10 @@ import UserPage from "./pages/UserPage";
 
 function App() {
   const [userId, setUserId] = useState(null);
-  const [userEvents, setUserEvents] = useState([]);
+  const [userPlans, setUserPlans] = useState([]);
   const [friends, setFriends] = useState([]);
-  const [friendsEvents, setFriendsEvents] = useState([]);
+  const [friendsPlans, setFriendsPlans] = useState([]);
+  const [allFriendsPlans, setAllFriendsPlans] = useState([]);
 
   // Get User Account
   useEffect(() => {
@@ -31,7 +32,7 @@ function App() {
   useEffect(() => {
     API.get("user/plans/")
       .then((res) => {
-        setUserEvents(res.data.plans);
+        setUserPlans(res.data.plans);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -51,11 +52,14 @@ function App() {
     Promise.all(friends.map((friend) => API.get(`plan/host/${friend}/`)))
       .then((responses) => {
         const data = responses.map((r, i) => ({
-          id: friends[i], // the friend's id
-          username: r.data[0]?.host_username || "Unknown", // get from event if available
-          plans: r.data || [], // all that friend's events
+          id: friends[i],
+          username: r.data[0]?.host_username || "Unknown",
+          plans: r.data || [],
         }));
-        setFriendsEvents(data);
+        setFriendsPlans(data);
+
+        const allPlans = data.flatMap((friend) => friend.plans);
+        setAllFriendsPlans(allPlans);
       })
       .catch((err) => console.error(err));
   }, [friends]);
@@ -105,32 +109,21 @@ function App() {
               {isLoggedIn && (
                 <Route
                   path="/"
-                  element={
-                    <HomePage
-                      userEvents={userEvents}
-                      friendsEvents={friendsEvents}
-                    />
-                  }
+                  element={<HomePage friendsPlans={allFriendsPlans} />}
                 />
               )}
               <Route
                 path="/home"
-                element={
-                  <HomePage
-                    userEvents={userEvents}
-                    friendsEvents={friendsEvents}
-                  />
-                }
+                element={<HomePage friendsPlans={allFriendsPlans} />}
               />
               <Route
                 path="/your-plans"
                 element={
                   <PlansPage
-                    events={userEvents}
-                    setEvents={setUserEvents}
+                    plans={userPlans}
+                    setPlans={setUserPlans}
                     isHost={true}
                     isFriendsPage={false}
-                    willExpand={true}
                   />
                 }
               />
@@ -138,11 +131,10 @@ function App() {
                 path="/friends"
                 element={
                   <PlansPage
-                    events={friendsEvents}
-                    setEvents={setFriendsEvents}
+                    plans={allFriendsPlans}
+                    setPlans={setFriendsPlans}
                     isHost={false}
                     isFriendsPage={true}
-                    willExpand={false}
                   />
                 }
               />
@@ -152,7 +144,7 @@ function App() {
               <Route
                 path="/account/:id"
                 element={
-                  <UserPage userId={userId} friendsEvents={friendsEvents} />
+                  <UserPage userId={userId} friendsEvents={friendsPlans} />
                 }
               />
             </Routes>
