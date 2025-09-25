@@ -1,5 +1,6 @@
 :root {
   --color-primary: #10b981;
+  --color-secondary: #333333;
 }
 
 .main,
@@ -10,14 +11,41 @@ html {
 }
 
 .header {
+  color: var(--color-secondary);
+  font-weight: 600;
+  font-size: 1.7rem;
+  letter-spacing: -1px;
+  text-align: center;
+}
+
+.suhba-title {
+  color: var(--color-primary);
   font-weight: 800;
   font-size: 2rem;
-  letter-spacing: 0.2;
-  text-align: center;
+  letter-spacing: -2px;
 }
 
 .navbar {
   background-color: white;
+}
+
+.my-nav-item {
+  border-radius: 8px;
+  margin: 0.2rem;
+  padding: 0.4rem 0.5rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.my-nav-item.not-active {
+  color: rgb(86, 86, 86);
+  background-color: transparent;
+}
+
+.my-nav-item.active {
+  color: var(--color-primary);
+
+  background-color: rgba(62, 81, 75, 0.15);
 }
 
 .my-button {

@@ -1,6 +1,4 @@
 import { Link, useLocation } from "react-router-dom";
-import Logout from "./Logout";
-import { useState } from "react";
 
 const navItems = [
   { path: "/home", label: "Home" },
@@ -10,81 +8,30 @@ const navItems = [
 ];
 
 export default function Navbar() {
-  const location = useLocation();
-  const [showLogout, setShowLogout] = useState(false);
-
-  function handleOpenLogout() {
-    setShowLogout(true);
-  }
-
-  function handleCancelLogout() {
-    setShowLogout(false);
-  }
-
-  function handleConfirmLogout() {
-    localStorage.clear();
-    window.location.href = "/login";
-  }
+  const location = useLocation();  
 
   return (
-    <>
-      {showLogout && (
-        <Logout onConfirm={handleConfirmLogout} onCancel={handleCancelLogout} />
-      )}
+    <>      
       <nav className="navbar navbar-expand navbar-dark shadow-sm">
         <div className="container">
-          <Link
-            className="nav-item header"
-            to="/home"
-            style={{
-              color: "#10b981",
-              fontSize: "35px",
-              letterSpacing: "-2px",
-            }}
-          >
+          <Link className="suhba-title" to="/home">
             SUHBA
           </Link>
 
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
               {navItems.map((item, index) => (
-                <li key={index} className="nav-item me-1">
+                <li key={index}>
                   <Link
-                    className={`nav-link px-3 py-2 fw-semibold ${
-                      location.pathname === item.path ? "active" : ""
+                    className={`my-nav-item ${
+                      location.pathname === item.path ? "active" : "not-active"
                     }`}
-                    style={{
-                      borderRadius: "8px",
-                      color: location.pathname === item.path
-                      ?"#10b981"
-                      :"rgb(86, 86, 86)",
-                      backgroundColor:
-                        location.pathname === item.path
-                          ? "rgba(62, 81, 75, 0.15)"
-                          : "transparent",
-                    }}
                     to={item.path}
                   >
                     {item.label}
                   </Link>
                 </li>
-              ))}
-
-              <li className="nav-item d-flex align-items-center ms-2">
-                <button
-                  className="btn btn-danger text-white d-flex"
-                  style={{
-                    height: "45px",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: 600,
-                    borderRadius: "8px",
-                  }}
-                  onClick={handleOpenLogout}
-                >
-                  Logout
-                </button>
-              </li>
+              ))}                                            
             </ul>
           </div>
         </div>
