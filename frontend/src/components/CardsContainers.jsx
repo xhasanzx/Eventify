@@ -4,13 +4,17 @@ import "../style/style.css";
 
 export default function CardsContainers({
   plans,
-  isHome,
+  isHome,  
+  isUserPage,
   noDataMessage,
-  isHost,
 }) {
+  if (isHome) {
+    plans = plans.sort(() => Math.random() - 0.5);
+  }
+
   return (
     <div className="cards-container">
-      {!isHome && plans?.length === 0 && (
+      {plans?.length === 0 && (
         <p style={{ fontSize: "28px" }} className="text-center text-muted">
           {noDataMessage[0].toUpperCase() + noDataMessage.slice(1)}
         </p>
@@ -19,7 +23,7 @@ export default function CardsContainers({
       <div className="row">
         {plans?.map((plan) => (
           <div
-            className={`plans-view ${isHost ? "plans-grid col-6" : "col-4"}`}
+            className={`plans-view ${isUserPage ? "plans-grid col-6" : "col-4"}`}
             key={plan.id}
           >
             <PlanCard plan={plan} />

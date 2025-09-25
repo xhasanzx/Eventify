@@ -4,52 +4,59 @@ import "../style/style.css";
 import { useParams } from "react-router-dom";
 import CardsContainers from "../components/CardsContainers";
 
-export default function UserPage({ userId }) {
-  const [username, setUsername] = useState("");
-  const [userPlans, setUserPlans] = useState([]);
+export default function UserPage({ userId, setFriends }) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [friendsNumber, setFriendsNumber] = useState(0);
+  const [user, setUser] = useState({
+    username: "",
+    friends: [],
+    plans: [],
+  });
   const [isFriend, setIsFriend] = useState(false);
-  const [sentRequests, setSentRequests] = useState([]);
   const [pendingRequest, setPendingRequest] = useState(false);
   const params = useParams();
   const id = params.id;
 
   const handleUnfriend = async () => {
+    setFriendsNumber(user.friends.length - 1);
+    setIsFriend(false);
+
     await API.post(`user/unfriend/${id}/`)
       .then((res) => {
         if (res.status === 200) {
           console.log("Successfully unfriended user.");
-          setIsFriend(false);
+          setUser((prev) => ({
+            ...prev,
+            friends: prev.friends.filter((friend) => friend !== id),
+          }));
+          setFriends((prev) => prev.filter((friend) => friend !== id));
         }
       })
       .catch((err) => {
         console.error("Error unfriending user:", err);
         setIsFriend(true);
+        setFriendsNumber(user.friends.length);
       });
   };
 
   const handleFreindRequest = async () => {
-    if (pendingRequest) {
-      await API.post(`user/cancel-friend-request/${id}/`)
-        .then(() => {
-          setPendingRequest(false);
-          setIsFriend(false);
-        })
-        .catch((err) => {
-          console.error("Error cancelling friend request:", err);
-          setPendingRequest(true);
-          setIsFriend(false);
-        });
+    if (user.pendingRequest === true) {
+      setPendingRequest(false);
+      setIsFriend(false);
+
+      await API.post(`user/cancel-friend-request/${id}/`).catch((err) => {
+        console.error("Error cancelling friend request:", err);
+        setPendingRequest(true);
+        setIsFriend(false);
+      });
     } else {
-      await API.post(`user/send-friend-request/${id}/`)
-        .then(() => {
-          setPendingRequest(true);
-          setIsFriend(false);
-        })
-        .catch((err) => {
-          console.error("Error sending friend request:", err);
-          setPendingRequest(false);
-          setIsFriend(false);
-        });
+      setPendingRequest(true);
+      setIsFriend(false);
+      await API.post(`user/send-friend-request/${id}/`).catch((err) => {
+        console.error("Error sending friend request:", err);
+        setPendingRequest(false);
+        setIsFriend(false);
+      });
     }
   };
 
@@ -61,84 +68,90 @@ export default function UserPage({ userId }) {
 
     const fetchData = async () => {
       try {
-        const accountRes = await API.get(`user/account/${id}/`);
-        setUsername(
-          accountRes.data.user.username[0].toUpperCase() +
-            accountRes.data.user.username.slice(1)
-        );
+        setIsLoading(true);
+        await API.get(`user/account/${id}/`).then((res) => {
+          setUser((prev) => ({
+            ...prev,
+            username:
+              res.data.user.username[0].toUpperCase() +
+              res.data.user.username.slice(1),
+            friends: res.data.user.friends,
+          }));
+          setFriendsNumber(res.data.user.friends.length);
+          setIsFriend(
+            res.data.user.friends.some((friendId) => friendId == userId)
+          );
+        });
 
-        const palnsRes = await API.get(`plan/host/${id}/`);
+        await API.get(`plan/host/${id}/`).then((res) => {
+          setUser((prev) => ({ ...prev, plans: res.data }));
+        });
 
-        setUserPlans(palnsRes.data);
-
-        if (accountRes.data.user.friends.includes(userId)) {
-          setIsFriend(true);
+        if (isFriend) {
           setPendingRequest(false);
         }
 
-        const requestsRes = await API.get(`user/friend-requests/`);
-        setSentRequests(requestsRes.data.sent_requests);
-
-        if (
-          sentRequests?.length > 0 &&
-          sentRequests?.map((request) => request.to_user_id == id)
-        ) {
-          setPendingRequest(true);
-        } else {
-          setPendingRequest(false);
-        }
+        await API.get(`user/friend-requests/`).then((res) => {
+          if (
+            res.data.sent_requests.some((request) => request.to_user_id == id)
+          ) {
+            setPendingRequest(true);
+          } else {
+            setPendingRequest(false);
+          }
+        });
       } catch (err) {
         console.error("Error fetching account data:", err);
+      } finally {
+        setIsLoading(false);
       }
     };
+
     fetchData();
     return () => controller.abort();
-  }, [id]);
+  }, [id, userId]);
 
   return (
-    <div className="account-container">
-      <h1 className="text-center header">{username}'s Account</h1>
-
-      <div className="text-center " style={{ gap: "10px" }}>
-        {isFriend ? <p>You are friends.</p> : <p>You are not friends, yet.</p>}
-      </div>
-
-      <div
-        className="text-center"
-        style={{
-          width: "8rem",
-          margin: "0 auto 1rem auto",
-          display: "flex",
-          justifyContent: "center",
-          alignContent: "center",
-        }}
-      >
-        {isFriend && (
-          <button className="btn btn-danger" onClick={handleUnfriend}>
-            Unfriend
-          </button>
-        )}
-
-        {(!isFriend && !pendingRequest && (
-          <button className="btn btn-primary" onClick={handleFreindRequest}>
-            Add Friend
-          </button>
-        )) ||
-          (pendingRequest && (
-            <button className="btn btn-secondary" onClick={handleFreindRequest}>
-              Request Sent
-            </button>
-          ))}
-      </div>
-
-      <div className="card-container">
-        <CardsContainers
-          events={userPlans ? userPlans : []}
-          willExpand={false}
-          title={`Plans`}
-          noDataMessage={`${username} has no plans yet.`}
-        />
-      </div>
-    </div>
+    <>
+      {isLoading ? (
+        <p className="header text-center">Loading...</p>
+      ) : (
+        <div className="row">
+          <div className="user-details-container col-4">
+            <p>{user.username}'s Account</p>
+            <p className="text-muted">Friends: {friendsNumber}</p>
+            <p className="text-muted">Plans: {user.plans.length}</p>
+            <p>
+              {isFriend && (
+                <button className="my-button" onClick={handleUnfriend}>
+                  Friends
+                </button>
+              )}
+              {(!isFriend && !pendingRequest && (
+                <button className=" my-button" onClick={handleFreindRequest}>
+                  Add friend
+                </button>
+              )) ||
+                (pendingRequest && (
+                  <button
+                    className="btn-secondary"
+                    onClick={handleFreindRequest}
+                  >
+                    Request Sent
+                  </button>
+                ))}
+            </p>
+          </div>
+          <div className="col-8">
+            <CardsContainers
+              plans={user.plans ? user.plans : []}
+              isHome={false}
+              isUserPage={true}
+              noDataMessage={`${user.username} has no plans yet.`}
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 }

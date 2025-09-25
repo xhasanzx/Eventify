@@ -9,7 +9,7 @@ export default function PlansPage({ plans, setPlans, isHost, isFriendsPage }) {
           <CardsContainers
             plans={plans ? plans : []}
             isHome={false}
-            isHost={isHost}
+            isUserPage={isHost}
             noDataMessage={"You have no plans yet."}
           />
         </div>

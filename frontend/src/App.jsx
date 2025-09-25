@@ -23,7 +23,7 @@ function App() {
   useEffect(() => {
     API.get("user/account/")
       .then((res) => {
-        setUserId(res.data.user.id);
+        setUserId(res.data.user.id);        
       })
       .catch((err) => console.error(err));
   }, []);
@@ -143,9 +143,7 @@ function App() {
               <Route path="/account" element={<AccountPage />} />
               <Route
                 path="/account/:id"
-                element={
-                  <UserPage userId={userId} friendsEvents={friendsPlans} />
-                }
+                element={<UserPage userId={userId} setFriends={setFriends}/>}
               />
             </Routes>
           </div>
