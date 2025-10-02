@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://127.0.0.1:8000/",
+  // baseURL: "http://127.0.0.1:8000/",  // TODO: change to the production URL
+  baseURL: "/api/",
   headers: {
     "Content-Type": "application/json",
   },
@@ -30,7 +31,7 @@ const refreshAccessToken = async () => {
 
   try {
     const response = await axios.post(
-      "http://127.0.0.1:8000/user/token/refresh/",
+      "/api/user/token/refresh/",
       {
         refresh: refreshToken,
       }
