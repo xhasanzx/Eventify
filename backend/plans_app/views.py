@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 
 from .models import Plan
-from backend.serializers import PlanSerializer
+from planify.serializers import PlanSerializer
 
 
 @api_view(['POST'])

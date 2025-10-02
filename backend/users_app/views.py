@@ -10,7 +10,7 @@ from rest_framework import status
 
 from .models import User, FriendRequest
 from plans_app.models import Plan
-from backend.serializers import UserSerializer, PlanSerializer, FriendRequestSerializer
+from planify.serializers import UserSerializer, PlanSerializer, FriendRequestSerializer
 
 
 def get_tokens_for_user(user):
