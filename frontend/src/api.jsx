@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const API = axios.create({
-  // baseURL: "http://127.0.0.1:8000/",  // TODO: change to the production URL
-  baseURL: "/api/",
+  baseURL: "http://127.0.0.1:8000/",  // TODO: change to the production URL
+  // baseURL: "/api/",
   headers: {
     "Content-Type": "application/json",
   },

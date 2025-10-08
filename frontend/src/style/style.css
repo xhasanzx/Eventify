@@ -1,33 +1,49 @@
-:root {
-  --color-primary: #10b981;
-  --color-secondary: #333333;
+/* Resets*/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.main,
-body,
-html {
-  min-height: 100vh;
-  background-color: whitesmoke;
+/* CSS Variables */
+:root {
+  --col-dark: hsl(0, 0%, 5%);
+  --col-medium: hsl(0, 0%, 10%);
+  --col-light: hsl(0, 0%, 15%);
+  --text-primary: hsl(160, 84%, 39%);
+  --text-secondary: hsl(0, 0%, 20%);
+}
+
+.login-page {
+  padding: 2rem;
+  padding-top: 3rem;
+  background-color: var(--col-dark);
+  display: flex;
+  min-width: 100vw;
+}
+
+.login-form {
+  width: 27rem;
+  background-color: var(--col-medium);
+  color: white;
+  font-weight: 500;
+  display: flex;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
 .header {
-  color: var(--color-secondary);
   margin: 0;
   font-weight: 800;
   font-size: 1.7rem;
-  letter-spacing: -1px;
   text-align: center;
 }
 
 .suhba-title {
-  color: var(--color-primary);
+  color: var(--text-primary);
   font-weight: 800;
   font-size: 2rem;
   letter-spacing: -2px;
-}
-
-.navbar {
-  background-color: white;
 }
 
 .my-nav-item {
@@ -44,13 +60,12 @@ html {
 }
 
 .my-nav-item.active {
-  color: var(--color-primary);
-
+  color: var(--text-primary);
   background-color: rgba(62, 81, 75, 0.15);
 }
 
 .my-button {
-  background-color: var(--color-primary);
+  background-color: var(--text-primary);
   color: white;
   font-size: 1.2rem;
   font-weight: 700;
@@ -104,9 +119,9 @@ html {
 }
 
 .plan-card:hover {
-  border: 1px solid var(--color-primary);
+  border: 1px solid var(--text-primary);
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  color: var(--color-primary);
+  color: var(--text-primary);
 }
 
 .plan-card-body-with-img {
@@ -130,7 +145,7 @@ html {
 .plan-card-meta {
   padding: 0;
   margin: 0 0 0.1rem 0;
-  color: var(--color-primary);
+  color: var(--text-primary);
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: 0.5px;

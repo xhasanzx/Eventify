@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
 import API from "./api";
 import Navbar from "./components/Navbar";
@@ -23,7 +28,7 @@ function App() {
   useEffect(() => {
     API.get("user/account/")
       .then((res) => {
-        setUserId(res.data.user.id);        
+        setUserId(res.data.user.id);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -89,67 +94,67 @@ function App() {
 
   if (!isLoggedIn) {
     return (
-      <Router>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-        </Routes>
-      </Router>
+      <div>
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            {/* catch-all redirects to login */}
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </Router>
+      </div>
     );
   }
 
   return (
-    <div className="main">
-      {isLoggedIn && (
-        <Router>
-          <Navbar />
-          <div className="container mt-4">
-            <Routes>
-              <Route path="/login" element={<LoginPage />}></Route>
-              <Route path="/signup" element={<SignupPage />}></Route>
-              {isLoggedIn && (
-                <Route
-                  path="/"
-                  element={<HomePage friendsPlans={allFriendsPlans} />}
-                />
-              )}
-              <Route
-                path="/home"
-                element={<HomePage friendsPlans={allFriendsPlans} />}
+    <Router>
+      <Navbar />
+      <div className="container mt-4">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomePage friendsPlans={friendsPlans ? friendsPlans : []} />
+            }
+          />
+          <Route
+            path="/home"
+            element={<HomePage friendsPlans={allFriendsPlans} />}
+          />
+          <Route
+            path="/your-plans"
+            element={
+              <PlansPage
+                plans={userPlans}
+                setPlans={setUserPlans}
+                isHost={true}
+                isFriendsPage={false}
               />
-              <Route
-                path="/your-plans"
-                element={
-                  <PlansPage
-                    plans={userPlans}
-                    setPlans={setUserPlans}
-                    isHost={true}
-                    isFriendsPage={false}
-                  />
-                }
+            }
+          />
+          <Route
+            path="/friends"
+            element={
+              <PlansPage
+                plans={allFriendsPlans}
+                setPlans={setFriendsPlans}
+                isHost={false}
+                isFriendsPage={true}
               />
-              <Route
-                path="/friends"
-                element={
-                  <PlansPage
-                    plans={allFriendsPlans}
-                    setPlans={setFriendsPlans}
-                    isHost={false}
-                    isFriendsPage={true}
-                  />
-                }
-              />
-              <Route path="/plan/:id" element={<PlanDetailsPage />} />
-              <Route path="/plan/:id/edit" element={<EditPlanPage />} />
-              <Route path="/account" element={<AccountPage />} />
-              <Route
-                path="/account/:id"
-                element={<UserPage userId={userId} setFriends={setFriends}/>}
-              />
-            </Routes>
-          </div>
-        </Router>
-      )}
-    </div>
+            }
+          />
+          <Route path="/plan/:id" element={<PlanDetailsPage />} />
+          <Route path="/plan/:id/edit" element={<EditPlanPage />} />
+          <Route path="/account" element={<AccountPage />} />
+          <Route
+            path="/account/:id"
+            element={<UserPage userId={userId} setFriends={setFriends} />}
+          />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

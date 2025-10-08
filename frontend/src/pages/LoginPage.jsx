@@ -2,32 +2,9 @@ import LoginForm from "../components/LoginForm";
 
 export default function LoginPage() {
   return (
-    <div
-      className="login-page container row"
-      style={{
-        minHeight: "100vh",
-        minWidth: "100vw",
-        background: "#F9F6F7",
-        display: "flex",
-      }}
-    >
-      <div
-        className="col-7"
-        style={{
-          padding: "40px 0 0 40px",
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-          color: "#1f2937",
-        }}
-      >
-        <h1
-          className="landing-page-title col-12"
-          style={{
-            padding: "0px 0px 0px 40px",
-            fontWeight: "800",
-            letterSpacing: "0.2px",
-          }}
-        >
+    <div className="login-page row">
+      <div className="col-7">
+        <h1 className="landing-page-title col-12">
           <span
             className="landing-page-subtitle"
             style={{
@@ -45,10 +22,11 @@ export default function LoginPage() {
             New way to plan together
           </span>
           <br />
-          Welcome to
-          <br />
+          <p style={{            
+            color: "hsla(0, 0%, 100%, 1.00)",
+          }}>Welcome to</p>
           <span
-            className="planify-title"
+            className="suhba-title"
             style={{
               fontFamily: "Fjalla One",
               fontStyle: "oblique",
@@ -71,7 +49,7 @@ export default function LoginPage() {
             textAlign: "left",
             fontFamily: "Arial",
             fontSize: "1.05rem",
-            color: "#374151",
+            color: "hsla(0, 0%, 100%, 1.00)",
             maxWidth: "720px",
           }}
         >
@@ -110,12 +88,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      <div
-        className="col-5"
-        style={{
-          padding: "0 50px 0 0",
-        }}
-      >
+      <div className="col-5">
         <LoginForm />
       </div>
     </div>
