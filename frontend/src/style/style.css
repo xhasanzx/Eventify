@@ -30,6 +30,8 @@
 
 #root {
   height: 100%;
+  min-height: 100vh;
+  width: 100%;
   background-color: var(--bg-dark);
   /* background: linear-gradient(to bottom, var(--bg-dark), var(--bg-medium)); */
 }
@@ -52,7 +54,7 @@
   box-shadow: var(--card-shadow);
 }
 
-.login-button-primary {
+.button-primary {
   width: 100%;
   text-decoration: none;
   background: var(--primary-dark);
@@ -65,7 +67,7 @@
   transition: transform 0.3s ease;
 }
 
-.login-button-primary:hover {
+.button-primary:hover {
   transform: translateY(-1px);
   box-shadow: 0px 1px 5px var(--bg-light);
 }
@@ -130,6 +132,7 @@
 }
 
 .plan-card {
+  padding: 0.5rem 0 0.5rem 0;
   margin-bottom: 2rem;
   height: 470px;
   width: 400px;
@@ -154,9 +157,6 @@
   margin: -0.5rem 0 0.7rem 0;
   font-size: var(--font-size-large);
   font-weight: bold;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .plan-card-body-with-img {
@@ -229,6 +229,29 @@
   border-radius: 8px;
   border: 1px solid var(--bg-medium);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.edit-plan-form {
+  background: var(--bg-medium);
+  color: var(--text-medium);
+  font-size: var(--font-size-xsmall);
+  letter-spacing: 0.5px;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  padding: 1rem;  
+  border-radius: 12px;
+}
+
+.edit-plan-form-header {
+  color: var(--text-light);
+  text-align: center;  
+  font-size: var(--font-size-large);
+  font-weight: 700;  
+}
+
+.edit-plan-form input{
+  background-color: var(--text-medium);
+  margin: 0;
 }
 
 .my-button {

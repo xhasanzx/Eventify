@@ -38,16 +38,8 @@ export default function AddPlanForm({ plans, setPlans }) {
   };
 
   return (
-    <div
-      className="card"
-      style={{
-        padding: "1rem",
-        width: "100%",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-        borderRadius: "12px",
-      }}
-    >
-      <h3 className="text-center header">Create a new plan</h3>
+    <div className="edit-plan-form">
+      <h3 className="edit-plan-form-header">Create a new plan</h3>
       <div>
         {newPlan.image_url && (
           <img
@@ -121,17 +113,7 @@ export default function AddPlanForm({ plans, setPlans }) {
         </div>
 
         <div className="col-12 text-center">
-          <button
-            type="submit"
-            className="btn px-4"
-            style={{
-              backgroundColor: "#10b981",
-              color: "white",
-              borderRadius: "10px",
-              fontWeight: 700,
-              boxShadow: "0 4px 6px rgba(16,185,129,0.25)",
-            }}
-          >
+          <button type="submit" className="button-primary">
             Create Plan
           </button>
         </div>

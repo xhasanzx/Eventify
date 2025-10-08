@@ -85,7 +85,7 @@ export default function LoginForm() {
 
           <button
             type="submit"
-            className="login-button-primary"
+            className="button-primary"
             disabled={isLoading}
           >
             {isLoading ? "Signing in..." : "Sign in"}
