@@ -38,8 +38,8 @@ export default function AddPlanForm({ plans, setPlans }) {
   };
 
   return (
-    <div className="edit-plan-form">
-      <h3 className="edit-plan-form-header">Create a new plan</h3>
+    <div className="add-plan-form">
+      <h3 className="add-plan-form-header">Create a new plan</h3>
       <div>
         {newPlan.image_url && (
           <img
