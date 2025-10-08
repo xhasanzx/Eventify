@@ -15,9 +15,9 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="navbar navbar-expand shadow-sm ">
+    <nav className="navbar navbar-expand">
       <div className="container">
-        <Link className="suhba-title" to="/home">
+        <Link className="suhba-navbar-title" to="/home">
           SUHBA
         </Link>
 
