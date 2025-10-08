@@ -37,9 +37,7 @@ export default function LoginForm() {
   return (
     <div className="login-form">
       <div className="card-body" style={{ padding: "24px" }}>
-        <h2 className="text-center mb-3 header">
-          Sign in to continue
-        </h2>
+        <h2 className="text-center mb-3 header">Sign in to continue</h2>
         {error && (
           <div className="alert alert-danger py-2" role="alert">
             {error}
@@ -87,16 +85,7 @@ export default function LoginForm() {
 
           <button
             type="submit"
-            className="btn w-100"
-            style={{
-              textDecoration: "none",
-              background: "#10b981",
-              color: "white",
-              padding: "10px 16px",
-              borderRadius: "10px",
-              fontWeight: 700,
-              boxShadow: "0 8px 20px rgba(16,185,129,0.25)",
-            }}
+            className="login-button-primary"
             disabled={isLoading}
           >
             {isLoading ? "Signing in..." : "Sign in"}
