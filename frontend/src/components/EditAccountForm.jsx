@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import "../style/style.css";
 
 export default function EditAccountForm() {
+  const [id, setId] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,24 +18,26 @@ export default function EditAccountForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (
-      !username.trim() ||
-      !email.trim() ||
-      !password.trim() ||
-      !password2.trim()
-    ) {
-      setError("Please fill in all required fields.");
-      return;
-    }
-    if (password !== password2) {
-      setError("Passwords do not match.");
-      return;
-    }
-    if (password.length < 3) {
-      setError("Password must be at least 3 characters.");
-      return;
-    }
-    console.log(username, email, password);
+
+    // if (password !== password2) {
+    //   setError("Passwords do not match.");
+    //   return;
+    // }
+    // if (password.length < 3) {
+    //   setError("Password must be at least 3 characters.");
+    //   return;
+    // }
+
+    API.put(`user/update/${id}/`, { username, email, password })
+      .then((res) => {
+        console.log(res);
+        setUsername(res.data.user.username);
+        setEmail(res.data.user.email);
+        setPassword(res.data.user.password);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const fetchData = async () => {
@@ -42,7 +45,8 @@ export default function EditAccountForm() {
       const accountRes = await API.get("user/account/");
       setUsername(accountRes.data.user.username);
       setEmail(accountRes.data.user.email);
-      setPassword(accountRes.data.user.password);
+      // setPassword(accountRes.data.user.password);
+      setId(accountRes.data.user.id);
     } catch (error) {}
   };
 
@@ -59,7 +63,10 @@ export default function EditAccountForm() {
       )}
       <p className="account-container-title">Account Details</p>
       <form>
-        <div className="form-group row">
+        <div
+          className="form-group row edit-account-form"
+          style={{ padding: "0 1rem 0 1rem" }}
+        >
           <div className="col-12">
             <label htmlFor="username">Username</label>
             <input
@@ -82,7 +89,7 @@ export default function EditAccountForm() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div className="col-6">
+          <div className="col-6 ">
             <label htmlFor="password">Password</label>
             <input
               type="password"
@@ -105,6 +112,7 @@ export default function EditAccountForm() {
             />
           </div>
         </div>
+
         <div
           className="col-12"
           style={{

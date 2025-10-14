@@ -408,7 +408,7 @@ body {
 }
 
 .account-container input {
-  background-color: var(--text-medium);
+  background-color: var(--text-medium);  
 }
 
 .account-header {
@@ -457,6 +457,7 @@ body {
   margin-top: 1.6rem;
 }
 
+
 .friends-list {
   display: flex;
   flex-direction: column;
@@ -485,7 +486,7 @@ body {
 .requests-list {
   flex-direction: column;
   overflow-y: hidden;
-  padding: 0 1rem 1rem 1rem;  
+  padding: 0 1rem 1rem 1rem;
 }
 
 .requests-item {

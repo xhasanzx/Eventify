@@ -102,6 +102,44 @@ def view_user_account(request, id):
         }, status=status.HTTP_404_NOT_FOUND)
 
 
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def update_account(request, id):
+    if request.user.id != id:
+        return JsonResponse({
+            "error": "you can only update your own account"
+        }, status=status.HTTP_403_FORBIDDEN)
+    
+    try:
+        user = User.objects.get(id=id)
+    except User.DoesNotExist:
+        return JsonResponse({
+            "error": "user not found"
+        }, status=status.HTTP_404_NOT_FOUND)
+
+    data = request.data
+    username = data.get('username', user.username)
+    email = data.get('email', user.email)
+    password = data.get('password', None)
+
+    user.username = username
+    user.email = email
+    if password:
+        user.set_password(password)
+    
+    try:
+        user.save()
+        serializer = UserSerializer(user, context={'request': request})
+        return JsonResponse({
+            "msg": "account updated successfully",
+            "user": serializer.data
+        }, status=status.HTTP_200_OK)
+    except IntegrityError as e:
+        return JsonResponse({
+            'error': 'IntegrityError: ' + str(e),
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_user_plans(request):
