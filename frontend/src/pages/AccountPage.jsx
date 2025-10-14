@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react";
+// Removed unused SVG import
 import Logout from "../components/Logout";
+import EditAccountForm from "../components/EditAccountForm";
 import API from "../api";
 import "../style/style.css";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export default function AccountPage() {
   const [username, setUsername] = useState("");
+  const [dateJoined, setDateJoined] = useState("");
   const [friends, setFriends] = useState([]);
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [sentRequests, setSentRequests] = useState([]);
@@ -61,6 +64,7 @@ export default function AccountPage() {
           accountRes.data.user.username[0].toUpperCase() +
             accountRes.data.user.username.slice(1)
         );
+        setDateJoined(accountRes.data.user.date_joined);
         const [friendsRes, requestsRes] = await Promise.all([
           API.get("user/friends/"),
           API.get("user/friend-requests/"),
@@ -83,16 +87,37 @@ export default function AccountPage() {
         <Logout onConfirm={handleConfirmLogout} onCancel={handleCancelLogout} />
       )}
 
-      <div className="row" style={{ gap: "2rem" }}>
-        <div className="account-friends-container col-5">
-          <h1 className="header">Account Details</h1>
-          <div className="account-details-list">
-            <p>Username: {username}</p>
+      <div className="account-page row">
+        <div className="account-header col-12">
+          <div className="account-header-title-container">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="account-header-img"
+              viewBox="0 0 16 16"
+            >
+              <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
+            </svg>
+            <p className="account-header-title">
+              {username
+                ? username[0].toUpperCase() + username.slice(1)
+                : "Username"}
+            </p>
+          </div>
+          <div className="account-header-text-container">
+            <p className="account-header-text">Friends: {friends?.length}</p>
+            <p className="account-header-text">
+              Joined: {new Date(dateJoined).toLocaleDateString()}
+            </p>
           </div>
         </div>
-        <div className="account-friends-container  col-5">
-          <h1 className="header">Friends</h1>
-          <div className="account-friends-list row">
+
+        <div className="account-container col-5">
+          <EditAccountForm username={username} />
+        </div>
+
+        <div className="account-container col-5">
+          <p className="account-container-title">Friends</p>
+          <div className="friends-list row">
             {friends?.length == 0 && <p>No friends</p>}
 
             {friends?.map((friend) => (
@@ -102,7 +127,7 @@ export default function AccountPage() {
                 to={`/account/${friend.id}`}
                 style={{ textDecoration: "none" }}
               >
-                <p>
+                <p className="friend-item">
                   {friend?.username[0].toUpperCase() +
                     friend?.username.slice(1)}
                 </p>
@@ -111,8 +136,8 @@ export default function AccountPage() {
           </div>
         </div>
 
-        <div className="account-requests-container col-5">
-          <h1 className="header">Received</h1>
+        <div className="account-container col-5">
+          <p className="account-container-title">Received</p>
           <div className="account-requests-list">
             {receivedRequests?.length == 0 && <p>No friend requests</p>}
 
@@ -151,9 +176,9 @@ export default function AccountPage() {
           </div>
         </div>
 
-        <div className="account-requests-container col-5">
-          <h1 className="header">Sent</h1>
-          <div className="account-requests-list">
+        <div className="account-container col-5">
+          <p className="account-container-title">Sent</p>
+          <div className="requests-list">
             {sentRequests?.length == 0 && <p>No sent requests</p>}
             {sentRequests?.map((sentTo) => (
               <div className="account-request-list-item" key={sentTo.id}>
@@ -180,6 +205,7 @@ export default function AccountPage() {
             ))}
           </div>
         </div>
+
         <button
           className="btn btn-danger text-white d-flex"
           style={{
