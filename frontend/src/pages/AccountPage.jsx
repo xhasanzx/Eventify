@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 
 export default function AccountPage() {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [dateJoined, setDateJoined] = useState("");
   const [friends, setFriends] = useState([]);
   const [receivedRequests, setReceivedRequests] = useState([]);
@@ -65,6 +67,8 @@ export default function AccountPage() {
             accountRes.data.user.username.slice(1)
         );
         setDateJoined(accountRes.data.user.date_joined);
+        setEmail(accountRes.data.user.email);
+        setPassword(accountRes.data.user.password);
         const [friendsRes, requestsRes] = await Promise.all([
           API.get("user/friends/"),
           API.get("user/friend-requests/"),
@@ -112,7 +116,11 @@ export default function AccountPage() {
         </div>
 
         <div className="account-container col-5">
-          <EditAccountForm username={username} />
+          <EditAccountForm
+            userName={username}
+            userEmail={email}
+            userPassword={password}
+          />
         </div>
 
         <div className="account-container col-5">
@@ -122,7 +130,7 @@ export default function AccountPage() {
 
             {friends?.map((friend) => (
               <Link
-                className="col-2 "
+                className="col-12"
                 key={friend.id}
                 to={`/account/${friend.id}`}
                 style={{ textDecoration: "none" }}
