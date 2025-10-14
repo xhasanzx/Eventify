@@ -8,8 +8,6 @@ import { Link } from "react-router-dom";
 
 export default function AccountPage() {
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [dateJoined, setDateJoined] = useState("");
   const [friends, setFriends] = useState([]);
   const [receivedRequests, setReceivedRequests] = useState([]);
@@ -67,8 +65,6 @@ export default function AccountPage() {
             accountRes.data.user.username.slice(1)
         );
         setDateJoined(accountRes.data.user.date_joined);
-        setEmail(accountRes.data.user.email);
-        setPassword(accountRes.data.user.password);
         const [friendsRes, requestsRes] = await Promise.all([
           API.get("user/friends/"),
           API.get("user/friend-requests/"),
@@ -106,129 +102,117 @@ export default function AccountPage() {
                 ? username[0].toUpperCase() + username.slice(1)
                 : "Username"}
             </p>
-          </div>
-          <div className="account-header-text-container">
             <p className="account-header-text">Friends: {friends?.length}</p>
             <p className="account-header-text">
               Joined: {new Date(dateJoined).toLocaleDateString()}
             </p>
           </div>
+          <div className="account-header-text-container"></div>
+
+          <button
+            className="button-danger"
+            style={{ width: "6rem" }}
+            onClick={handleOpenLogout}
+          >
+            Logout
+          </button>
         </div>
 
-        <div className="account-container col-5">
-          <EditAccountForm
-            userName={username}
-            userEmail={email}
-            userPassword={password}
-          />
-        </div>
-
-        <div className="account-container col-5">
-          <p className="account-container-title">Friends</p>
-          <div className="friends-list row">
-            {friends?.length == 0 && <p>No friends</p>}
-
-            {friends?.map((friend) => (
-              <Link
-                className="col-12"
-                key={friend.id}
-                to={`/account/${friend.id}`}
-                style={{ textDecoration: "none" }}
-              >
-                <p className="friend-item">
-                  {friend?.username[0].toUpperCase() +
-                    friend?.username.slice(1)}
-                </p>
-              </Link>
-            ))}
+        <div className="account-page-main-container">
+          <div className="account-container">
+            <EditAccountForm />
           </div>
-        </div>
 
-        <div className="account-container col-5">
-          <p className="account-container-title">Received</p>
-          <div className="account-requests-list">
-            {receivedRequests?.length == 0 && <p>No friend requests</p>}
+          <div className="account-container">
+            <p className="account-container-title">Friends</p>
+            <div className="friends-list">
+              {friends?.length == 0 && <p>No friends</p>}
 
-            {receivedRequests?.map((requestedBy) => (
-              <div className="account-request-list-item" key={requestedBy.id}>
+              {friends?.map((friend) => (
                 <Link
-                  className="account-request-list-item d-flex"
-                  to={`/account/${requestedBy.from_user_id}`}
+                  key={friend.id}
+                  to={`/account/${friend.id}`}
                   style={{ textDecoration: "none" }}
                 >
-                  <p>
-                    {requestedBy.from_user[0].toUpperCase() +
-                      requestedBy.from_user.slice(1)}
+                  <p className="friend-item">
+                    {friend?.username[0].toUpperCase() +
+                      friend?.username.slice(1)}
                   </p>
                 </Link>
-                <button
-                  className="btn btn-primary"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleAcceptRequest(requestedBy.from_user_id);
-                  }}
-                >
-                  Accept
-                </button>
-                <button
-                  className="btn btn-danger"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleRejectRequest(requestedBy.from_user_id);
-                  }}
-                >
-                  Reject
-                </button>
-              </div>
-            ))}
+              ))}
+            </div>
+          </div>
+
+          <div className="account-container">
+            <p className="account-container-title">Received</p>
+            <div className="account-requests-list">
+              {receivedRequests?.length == 0 && <p>No friend requests</p>}
+
+              {receivedRequests?.map((requestedBy) => (
+                <div className="account-request-list-item" key={requestedBy.id}>
+                  <Link
+                    className="account-request-list-item d-flex"
+                    to={`/account/${requestedBy.from_user_id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <p>
+                      {requestedBy.from_user[0].toUpperCase() +
+                        requestedBy.from_user.slice(1)}
+                    </p>
+                  </Link>
+                  <button
+                    className="btn btn-primary"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleAcceptRequest(requestedBy.from_user_id);
+                    }}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleRejectRequest(requestedBy.from_user_id);
+                    }}
+                  >
+                    Reject
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="account-container">
+            <p className="account-container-title">Sent</p>
+            <div className="requests-list">
+              {sentRequests?.length == 0 && <p>No sent requests</p>}
+              {sentRequests?.map((sentTo) => (
+                <div className="account-request-list-item" key={sentTo.id}>
+                  <Link
+                    className="account-request-list-item"
+                    to={`/account/${sentTo.to_user_id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <p>
+                      {sentTo?.to_user[0].toUpperCase() +
+                        sentTo?.to_user.slice(1)}
+                    </p>
+                  </Link>
+                  <button
+                    className="btn btn-danger"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleCancelRequest(sentTo.to_user_id);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-
-        <div className="account-container col-5">
-          <p className="account-container-title">Sent</p>
-          <div className="requests-list">
-            {sentRequests?.length == 0 && <p>No sent requests</p>}
-            {sentRequests?.map((sentTo) => (
-              <div className="account-request-list-item" key={sentTo.id}>
-                <Link
-                  className="account-request-list-item"
-                  to={`/account/${sentTo.to_user_id}`}
-                  style={{ textDecoration: "none" }}
-                >
-                  <p>
-                    {sentTo?.to_user[0].toUpperCase() +
-                      sentTo?.to_user.slice(1)}
-                  </p>
-                </Link>
-                <button
-                  className="btn btn-danger"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleCancelRequest(sentTo.to_user_id);
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <button
-          className="btn btn-danger text-white d-flex"
-          style={{
-            width: "20%",
-            height: "45px",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: "0 auto",
-            fontWeight: 600,
-            borderRadius: "8px",
-          }}
-          onClick={handleOpenLogout}
-        >
-          Logout
-        </button>
       </div>
     </>
   );

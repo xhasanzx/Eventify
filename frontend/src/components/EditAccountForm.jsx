@@ -2,10 +2,10 @@ import API from "../api";
 import { useState, useEffect } from "react";
 import "../style/style.css";
 
-export default function EditAccountForm({ userName, userEmail, userPassword }) {
-  const [username, setUsername] = useState(userName);
-  const [email, setEmail] = useState(userEmail);
-  const [password, setPassword] = useState(userPassword);
+export default function EditAccountForm() {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [error, setError] = useState("");
 
@@ -36,6 +36,19 @@ export default function EditAccountForm({ userName, userEmail, userPassword }) {
     }
     console.log(username, email, password);
   };
+
+  const fetchData = async () => {
+    try {
+      const accountRes = await API.get("user/account/");
+      setUsername(accountRes.data.user.username);
+      setEmail(accountRes.data.user.email);
+      setPassword(accountRes.data.user.password);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <>
