@@ -145,40 +145,40 @@ export default function AccountPage() {
 
           <div className="account-container">
             <p className="account-container-title">Received</p>
-            <div className="account-requests-list">
+            <div className="requests-list">
               {receivedRequests?.length == 0 && <p>No friend requests</p>}
 
               {receivedRequests?.map((requestedBy) => (
-                <div className="account-request-list-item" key={requestedBy.id}>
-                  <Link
-                    className="account-request-list-item d-flex"
-                    to={`/account/${requestedBy.from_user_id}`}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <p>
-                      {requestedBy.from_user[0].toUpperCase() +
-                        requestedBy.from_user.slice(1)}
-                    </p>
-                  </Link>
-                  <button
-                    className="btn btn-primary"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleAcceptRequest(requestedBy.from_user_id);
-                    }}
-                  >
-                    Accept
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleRejectRequest(requestedBy.from_user_id);
-                    }}
-                  >
-                    Reject
-                  </button>
-                </div>
+                <Link
+                  key={requestedBy.id}
+                  className="requests-item"
+                  to={`/account/${requestedBy.from_user_id}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  {requestedBy.from_user[0].toUpperCase() +
+                    requestedBy.from_user.slice(1)}
+
+                  <div className="requests-item-buttons">
+                    <button
+                      className="button-primary"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleAcceptRequest(requestedBy.from_user_id);
+                      }}
+                    >
+                      Accept
+                    </button>
+                    <button
+                      className="button-danger"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleRejectRequest(requestedBy.from_user_id);
+                      }}
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -198,12 +198,6 @@ export default function AccountPage() {
                   {sentTo?.to_user[0].toUpperCase() + sentTo?.to_user.slice(1)}
                   <button
                     className="button-danger"
-                    style={{
-                      width: "max-content",
-                      height: "2.5rem",
-                      fontSize: "var(--font-size-small)",
-                      padding: "0.1rem 1rem 0.1rem 1rem",
-                    }}
                     onClick={(e) => {
                       e.preventDefault();
                       handleCancelRequest(sentTo.to_user_id);
