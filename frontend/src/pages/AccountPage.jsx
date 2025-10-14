@@ -187,20 +187,23 @@ export default function AccountPage() {
             <p className="account-container-title">Sent</p>
             <div className="requests-list">
               {sentRequests?.length == 0 && <p>No sent requests</p>}
+
               {sentRequests?.map((sentTo) => (
-                <div className="account-request-list-item" key={sentTo.id}>
-                  <Link
-                    className="account-request-list-item"
-                    to={`/account/${sentTo.to_user_id}`}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <p>
-                      {sentTo?.to_user[0].toUpperCase() +
-                        sentTo?.to_user.slice(1)}
-                    </p>
-                  </Link>
+                <Link
+                  key={sentTo.id}
+                  className="requests-item"
+                  to={`/account/${sentTo.to_user_id}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  {sentTo?.to_user[0].toUpperCase() + sentTo?.to_user.slice(1)}
                   <button
-                    className="btn btn-danger"
+                    className="button-danger"
+                    style={{
+                      width: "max-content",
+                      height: "2.5rem",
+                      fontSize: "var(--font-size-small)",
+                      padding: "0.1rem 1rem 0.1rem 1rem",
+                    }}
                     onClick={(e) => {
                       e.preventDefault();
                       handleCancelRequest(sentTo.to_user_id);
@@ -208,7 +211,7 @@ export default function AccountPage() {
                   >
                     Cancel
                   </button>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

@@ -443,7 +443,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow-y: hidden;
-  padding: 0 1rem 0 1rem;  
+  padding: 0 1rem 0 1rem;
 }
 
 .friend-item {
@@ -460,6 +460,31 @@ body {
 }
 
 .friend-item:hover {
+  transform: translateY(-1px);
+  border: 0.1rem solid var(--primary-dark);
+}
+
+.requests-list {
+  flex-direction: column;
+  overflow-y: hidden;
+  padding: 0 1rem 1rem 1rem;
+}
+
+.requests-item {
+  background-color: var(--bg-light);
+  color: var(--text-light);
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--bg-light);
+  border-radius: 0.3rem;
+  padding: 1rem 1.5rem 1rem 1.5rem;
+  font-size: var(--font-size-medium);
+  transition: transform 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.requests-item:hover {
   transform: translateY(-1px);
   border: 0.1rem solid var(--primary-dark);
 }
@@ -514,12 +539,10 @@ body {
 }
 
 .button-danger {
-  width: 10rem;
   text-decoration: none;
   background: var(--primary-danger);
-  color: white;
+  color: var(--text-light);
   padding: 10px 16px;
-  margin-top: 1rem;
   border-radius: 10px;
   font-weight: 700;
   border: none;
