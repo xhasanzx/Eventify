@@ -126,7 +126,9 @@ export default function AccountPage() {
           <div className="account-container">
             <p className="account-container-title">Friends</p>
             <div className="friends-list">
-              {friends?.length == 0 && <p>No friends</p>}
+              <p style={{ textAlign: "center" }}>
+                {friends?.length == 0 && <p>No friends</p>}
+              </p>
 
               {friends?.map((friend) => (
                 <Link
@@ -146,7 +148,9 @@ export default function AccountPage() {
           <div className="account-container">
             <p className="account-container-title">Received</p>
             <div className="requests-list">
-              {receivedRequests?.length == 0 && <p>No friend requests</p>}
+              <p style={{ textAlign: "center" }}>
+                {receivedRequests?.length == 0 && <p>No friend requests</p>}
+              </p>
 
               {receivedRequests?.map((requestedBy) => (
                 <Link
@@ -186,7 +190,9 @@ export default function AccountPage() {
           <div className="account-container">
             <p className="account-container-title">Sent</p>
             <div className="requests-list">
-              {sentRequests?.length == 0 && <p>No sent requests</p>}
+              <p style={{ textAlign: "center" }}>
+                {sentRequests?.length == 0 && <p>No sent requests</p>}
+              </p>
 
               {sentRequests?.map((sentTo) => (
                 <Link

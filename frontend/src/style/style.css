@@ -393,6 +393,13 @@ body {
   gap: 1rem;
 }
 
+.edit-account-form {
+  padding: 0 1rem 0 1rem;
+  display: flex;
+  flex-direction: column;
+  letter-spacing: 0.5px;
+}
+
 .account-container {
   background-color: var(--bg-medium);
   color: var(--text-light);

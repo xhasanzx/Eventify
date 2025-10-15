@@ -28,12 +28,11 @@ export default function EditAccountForm() {
     //   return;
     // }
 
-    API.put(`user/update/${id}/`, { username, email, password })
+    API.put(`user/update/${id}/`, { username, email })
       .then((res) => {
         console.log(res);
         setUsername(res.data.user.username);
-        setEmail(res.data.user.email);
-        setPassword(res.data.user.password);
+        setEmail(res.data.user.email);        
       })
       .catch((err) => {
         console.log(err);
@@ -45,7 +44,7 @@ export default function EditAccountForm() {
       const accountRes = await API.get("user/account/");
       setUsername(accountRes.data.user.username);
       setEmail(accountRes.data.user.email);
-      // setPassword(accountRes.data.user.password);
+      setPassword(accountRes.data.user.password);
       setId(accountRes.data.user.id);
     } catch (error) {}
   };
@@ -62,12 +61,9 @@ export default function EditAccountForm() {
         </div>
       )}
       <p className="account-container-title">Account Details</p>
-      <form>
-        <div
-          className="form-group row edit-account-form"
-          style={{ padding: "0 1rem 0 1rem" }}
-        >
-          <div className="col-12">
+      <form className="edit-account-form">
+        <div className="row">
+          <div className="mb-3 col-12">
             <label htmlFor="username">Username</label>
             <input
               type="text"
@@ -78,7 +74,7 @@ export default function EditAccountForm() {
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
-          <div className="col-12">
+          <div className="mb-3 col-12">
             <label htmlFor="email">Email</label>
             <input
               type="email"
@@ -89,26 +85,26 @@ export default function EditAccountForm() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div className="col-6 ">
+          <div className="mb-3 col-6 ">
             <label htmlFor="password">Password</label>
             <input
               type="password"
               className="form-control"
               id="password"
-              value={password}
+              value={""}
               autoComplete="password"
-              onChange={(e) => setPassword(e.target.value)}
+              // onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <div className="col-6">
+          <div className="mb-3 col-6">
             <label htmlFor="password2">Confirm Password</label>
             <input
               type="password"
               className="form-control"
               id="password2"
-              value={password}
+              value={""}
               autoComplete="password"
-              onChange={(e) => setPassword2(e.target.value)}
+              // onChange={(e) => setPassword2(e.target.value)}
             />
           </div>
         </div>
