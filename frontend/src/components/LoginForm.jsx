@@ -36,14 +36,13 @@ export default function LoginForm() {
 
   return (
     <div className="login-form">
-      <div className="card-body" style={{ padding: "24px" }}>
+      <div className="card-body" style={{ padding: "0 24px" }}>
         <h2 className="login-form-title">Sign in to continue</h2>
         {error && (
           <div className="alert alert-danger py-2" role="alert">
             {error}
           </div>
         )}
-
         <form onSubmit={handleSubmit} noValidate>
           <div className="mb-3">
             <label className="form-label">Username</label>

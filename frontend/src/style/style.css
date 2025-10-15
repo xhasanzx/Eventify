@@ -101,7 +101,9 @@ body {
 
 .login-form {
   width: 27rem;
-  height: 27rem;
+  min-height: 27rem;
+  padding-bottom: 1rem;
+  height: max-content;
   display: flex;
   flex-direction: column;
   background-color: var(--bg-medium);
@@ -408,7 +410,7 @@ body {
 }
 
 .account-container input {
-  background-color: var(--text-medium);  
+  background-color: var(--text-medium);
 }
 
 .account-header {
@@ -456,7 +458,6 @@ body {
   text-align: center;
   margin-top: 1.6rem;
 }
-
 
 .friends-list {
   display: flex;

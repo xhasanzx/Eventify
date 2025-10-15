@@ -4,7 +4,7 @@ import "../style/style.css";
 
 export default function CardsContainers({
   plans,
-  isHome,  
+  isHome,
   isUserPage,
   noDataMessage,
 }) {
@@ -13,9 +13,15 @@ export default function CardsContainers({
   }
 
   return (
-    <div className="cards-container">
+    <div>
       {plans?.length === 0 && (
-        <p style={{ fontSize: "28px" }} className="text-center text-muted">
+        <p
+          style={{
+            fontSize: "var(--font-size-medium)",
+            color: "var(--text-dark)",
+            textAlign: "center",
+          }}
+        >
           {noDataMessage[0].toUpperCase() + noDataMessage.slice(1)}
         </p>
       )}
@@ -23,7 +29,9 @@ export default function CardsContainers({
       <div className="row">
         {plans?.map((plan) => (
           <div
-            className={`plans-view ${isUserPage ? "plans-grid col-6" : "col-4"}`}
+            className={`plans-view ${
+              isUserPage ? "plans-grid col-6" : "col-4"
+            }`}
             key={plan.id}
           >
             <PlanCard plan={plan} />
