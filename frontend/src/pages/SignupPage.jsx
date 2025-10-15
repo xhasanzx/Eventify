@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import API, { setTokens } from "../api";
 
 export default function SignupPage() {
@@ -16,7 +17,7 @@ export default function SignupPage() {
     setError("");
     setSuccess("");
 
-    if (!username.trim() || !email.trim() || !phone.trim() || !password) {
+    if (!username.trim() || !email.trim() || !password) {
       setError("Please fill in all required fields.");
       return;
     }
@@ -30,7 +31,7 @@ export default function SignupPage() {
     }
 
     setIsLoading(true);
-    API.post("/user/signup/", { username, password, email, phone })
+    API.post("/user/signup/", { username, password, email })
       .then((res) => {
         setSuccess("Account created! We're redirecting you to the home page.");
         setTokens(res.data.tokens.access, res.data.tokens.refresh);
@@ -49,27 +50,104 @@ export default function SignupPage() {
 
   return (
     <div
+      className="row"
       style={{
-        display: "flex",
+        margin: "2rem 3rem",
         justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        background: "#F9F6F7",
-        padding: "16px",
+        height: "100%",
       }}
     >
       <div
-        className="card"
+        className="card signup-sidebar col-6"
         style={{
-          width: "100%",
-          maxWidth: "520px",
+          color: "var(--text-medium)",
+          backgroundColor: "var(--bg-medium)",
           borderRadius: "12px",
-          boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+          width: "30rem",
+          margin: "1rem auto",
+          boxShadow: "var(--card-shadow)",
+          alignItems: "center",
+          fontWeight: "500",
+        }}
+      >
+        <h1
+          style={{
+            color: "var(--text-medium)",
+            margin: "1rem",
+            fontSize: "var(--font-size-large)",
+            fontWeight: "800",
+            textAlign: "center",
+          }}
+        >
+          Welcome
+          <br />
+          <span
+            style={{
+              color: "var(--primary-medium)",
+              fontSize: "var(--font-size-xlarge)",
+              letterSpacing: "1.5px",
+            }}
+          >
+            to Suhba
+          </span>
+        </h1>
+
+        <p
+          style={{
+            margin: "1rem",
+            fontSize: "var(--font-size-medium)",
+            textAlign: "center",
+            letterSpacing: "0.5px",
+            lineHeight: "1.5",
+            width: "80%",
+            margin: "auto 0",
+          }}
+        >
+          We are glad to have you here! Create your account, and start planing
+          your next meet up!
+        </p>
+        <p
+          style={{
+            fontSize: "var(--font-size-small)",
+            margin: "auto 0",
+          }}
+        >
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            style={{
+              color: "var(--primary-medium)",
+              fontSize: "var(--font-size-small)",
+              WebkitTextStroke: "0.1px var(--primary-light)",
+            }}
+          >
+            Login
+          </Link>
+        </p>
+      </div>
+      <div
+        className="card col-6"
+        style={{
+          color: "var(--text-medium)",
+          backgroundColor: "var(--bg-medium)",
+          borderRadius: "12px",
+          width: "30rem",
+          margin: "1rem auto",
+          boxShadow: "var(--card-shadow)",
         }}
       >
         <div className="card-body" style={{ padding: "24px" }}>
-          <h3 className="text-center mb-2">Create your account</h3>
-          <p className="text-muted text-center mb-4">Join Planify in seconds</p>
+          <h3
+            style={{
+              textAlign: "center",
+              margin: "1rem",
+              color: "var(--primary-medium)",
+              fontSize: "var(--font-size-xlarge)",
+              fontWeight: "800",
+            }}
+          >
+            Create your account
+          </h3>
 
           {error && (
             <div className="alert alert-danger py-2" role="alert">
@@ -110,7 +188,7 @@ export default function SignupPage() {
                 />
               </div>
 
-              <div className="col-12">
+              <div className="col-6">
                 <label className="form-label">Password</label>
                 <div className="input-group">
                   <input
@@ -132,7 +210,7 @@ export default function SignupPage() {
                 </div>
               </div>
 
-              <div className="col-12">
+              <div className="col-6">
                 <label className="form-label">Confirm Password</label>
                 <input
                   type={showPassword ? "text" : "password"}
@@ -148,7 +226,12 @@ export default function SignupPage() {
               <div className="col-12 pt-2">
                 <button
                   type="submit"
-                  className="btn btn-primary w-100"
+                  className="button-primary"
+                  style={{
+                    width: "100%",
+                    margin: "0 auto",
+                    display: "block",
+                  }}
                   disabled={isLoading}
                 >
                   {isLoading ? "Creating account..." : "Sign up"}
