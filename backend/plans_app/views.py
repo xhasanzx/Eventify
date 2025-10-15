@@ -7,6 +7,16 @@ from .models import Plan
 from planify.serializers import PlanSerializer
 
 
+@api_view(['GET'])
+@permission_classes([AllowAny]) 
+def get_all_plans(request):
+    try:        
+        plans = Plan.objects.filter(is_active=True)
+        serializer = PlanSerializer(plans, many=True, context={'request': request})
+        return JsonResponse(serializer.data, safe=False, status=200)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_event(request):    

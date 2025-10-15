@@ -16,6 +16,7 @@ import PlansPage from "./pages/PlansPage";
 import SignupPage from "./pages/SignupPage";
 import AccountPage from "./pages/AccountPage";
 import UserPage from "./pages/UserPage";
+import DiscoverPage from "./pages/DiscoverPage";
 
 function App() {
   const [userId, setUserId] = useState(null);
@@ -144,6 +145,10 @@ function App() {
                 isFriendsPage={true}
               />
             }
+          />
+          <Route
+            path="/discover"
+            element={<DiscoverPage friends={friends} userId={userId} />}
           />
           <Route path="/plan/:id" element={<PlanDetailsPage />} />
           <Route path="/plan/:id/edit" element={<EditPlanPage />} />
