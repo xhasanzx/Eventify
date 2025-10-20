@@ -10,3 +10,5 @@ urlpatterns = [
     
     path('host/<int:id>/', views.get_host_plan, name='get_host_plan'),    
 ]
+
+
