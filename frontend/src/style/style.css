@@ -163,10 +163,10 @@ body {
 
 .suhba-navbar-title {
   color: var(--primary-medium);
+  font-size: var(--font-size-xlarge);
   text-decoration: none;
-  font-size: 1.5rem;
   font-weight: 800;
-  letter-spacing: -1.5px;
+  letter-spacing: -1px;
 }
 
 .my-nav-item {
@@ -200,7 +200,7 @@ body {
   box-sizing: border-box;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 1rem;  
+  gap: 1rem;
   align-items: start;
 }
 
@@ -316,7 +316,7 @@ body {
 }
 
 .plan-card:hover {
-  border: 0.1rem solid var(--primary-dark);
+  border: 0.1rem solid var(--primary-dark);  
 }
 
 .plan-card-title {
@@ -355,7 +355,9 @@ body {
 
 .plan-card-meta svg {
   fill: var(--primary-light);
-  margin-right: 0.5rem;
+  margin-right: 0.5rem;  
+  display: flex;
+  align-items: center;
   width: 1.5rem;
   height: 1.5rem;
 }
@@ -479,6 +481,14 @@ body {
   letter-spacing: 0.5px;
   text-align: center;
   margin-top: 1.6rem;
+}
+
+.discover-page-title {
+  font-size: var(--font-size-xlarge);
+  color: var(--text-light);
+  text-align: center;
+  font-weight: 700;
+  margin-top: -0.5rem;
 }
 
 .friends-list {

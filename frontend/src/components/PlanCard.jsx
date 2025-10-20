@@ -40,7 +40,7 @@ export default function PlanCard({ plan }) {
                   : ""}
               </div>
             )}
-            
+
             {plan?.location && (
               <div className="plan-card-meta">
                 <svg
