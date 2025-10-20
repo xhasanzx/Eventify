@@ -116,41 +116,65 @@ export default function UserPage({ userId, setFriends }) {
       {isLoading ? (
         <p className="header text-center">Loading...</p>
       ) : (
-        <div className="row">
-          <div className="user-details-container col-4">
-            <p>{user.username}'s Account</p>
-            <p className="text-muted">Friends: {friendsNumber}</p>
-            <p className="text-muted">Plans: {user.plans.length}</p>
-            <p>
-              {isFriend && (
-                <button className="my-button" onClick={handleUnfriend}>
-                  Friends
-                </button>
-              )}
-              {(!isFriend && !pendingRequest && (
-                <button className=" my-button" onClick={handleFreindRequest}>
-                  Add friend
-                </button>
-              )) ||
-                (pendingRequest && (
-                  <button
-                    className="btn-secondary"
-                    onClick={handleFreindRequest}
-                  >
-                    Request Sent
-                  </button>
-                ))}
-            </p>
+        <>
+          <div className="avatar-circle">
+            <p>{user.username?.[0]?.toUpperCase()}</p>
           </div>
-          <div className="col-8">
-            <CardsContainers
+          <div className="user-page-container">
+            <div className="user-page-text-container">
+              <p
+                style={{
+                  fontSize: "3rem",
+                  color: "var(--text-medium)",
+                  WebkitTextStroke: "2px var(--bg-dark)",
+                  fontWeight: "800",
+                  marginBottom: "0",
+                }}
+              >
+                {user.username
+                  ? user.username[0].toUpperCase() + user.username.slice(1)
+                  : "Username"}
+              </p>
+              <div className="user-page-meta-container">
+                <p className="user-page-meta-text">Friends: {friendsNumber}</p>
+                <p className="user-page-meta-text">
+                  Plans: {user.plans.length}
+                </p>
+              </div>
+            </div>
+
+            {isFriend ? (
+              <button
+                className="button-danger"
+                onClick={handleUnfriend}
+                style={{ backgroundColor: "var(--bg-light)" }}
+              >
+                Friends
+              </button>
+            ) : pendingRequest ? (
+              <button
+                className="button-cancel"
+                onClick={handleFreindRequest}
+                style={{ backgroundColor: "var(--bg-light)" }}
+              >
+                Request Sent
+              </button>
+            ) : (
+              <button className="button-primary" onClick={handleFreindRequest}>
+                Add friend
+              </button>
+            )}
+          </div>
+
+          <div>
+            <CardsContainers             
               plans={user.plans ? user.plans : []}
               isHome={false}
               isUserPage={true}
               noDataMessage={`${user.username} has no plans yet.`}
             />
           </div>
-        </div>
+        </>
       )}
     </>
   );
