@@ -35,7 +35,7 @@ export default function DiscoverPage({ friends = [], userId }) {
     nonFriends.sort(byDateDesc);
     friendsPlans.sort(byDateDesc);
 
-    return [...nonFriends, ...friendsPlans];
+    return [...friendsPlans, ...nonFriends];
   }, [plans, friends, userId]);
 
   if (loading) return <p>Loading...</p>;
@@ -44,8 +44,7 @@ export default function DiscoverPage({ friends = [], userId }) {
     <div className="row">
       <CardsContainers
         plans={ordered}
-        isHome={false}
-        isUserPage={false}
+        isHome={false}        
         noDataMessage={"No plans to discover yet."}
       />
     </div>

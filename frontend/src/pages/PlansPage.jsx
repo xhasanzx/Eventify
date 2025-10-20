@@ -8,8 +8,7 @@ export default function PlansPage({ plans, setPlans, isHost, isFriendsPage }) {
         <div className={"col-8"}>
           <CardsContainers
             plans={plans ? plans : []}
-            isHome={false}
-            isUserPage={isHost}
+            isHome={false}            
             noDataMessage={"You have no plans yet."}
           />
         </div>
@@ -24,8 +23,7 @@ export default function PlansPage({ plans, setPlans, isHost, isFriendsPage }) {
       {!isHost && isFriendsPage && (
         <CardsContainers
           plans={plans ? plans : []}
-          isHome={false}
-          isHost={isHost}
+          isHome={false}          
           noDataMessage={`Friends have no plans yet.`}
         />
       )}

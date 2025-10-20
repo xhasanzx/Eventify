@@ -4,8 +4,7 @@ import "../style/style.css";
 
 export default function CardsContainers({
   plans,
-  isHome,
-  isUserPage,
+  isHome,  
   noDataMessage,
 }) {
   if (isHome) {

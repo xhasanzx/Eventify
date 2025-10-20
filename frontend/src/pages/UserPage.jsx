@@ -169,8 +169,7 @@ export default function UserPage({ userId, setFriends }) {
           <div>
             <CardsContainers             
               plans={user.plans ? user.plans : []}
-              isHome={false}
-              isUserPage={true}
+              isHome={false}              
               noDataMessage={`${user.username} has no plans yet.`}
             />
           </div>
