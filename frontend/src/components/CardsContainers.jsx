@@ -26,14 +26,9 @@ export default function CardsContainers({
         </p>
       )}
 
-      <div className="row">
+      <div className="cards-container">
         {plans?.map((plan) => (
-          <div
-            className={`plans-view ${
-              isUserPage ? "plans-grid col-6" : "col-4"
-            }`}
-            key={plan.id}
-          >
+          <div key={plan.id} className="cards-container-item">
             <PlanCard plan={plan} />
           </div>
         ))}
