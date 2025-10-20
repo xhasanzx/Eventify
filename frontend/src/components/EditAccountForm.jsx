@@ -32,7 +32,7 @@ export default function EditAccountForm() {
       .then((res) => {
         console.log(res);
         setUsername(res.data.user.username);
-        setEmail(res.data.user.email);        
+        setEmail(res.data.user.email);
       })
       .catch((err) => {
         console.log(err);
