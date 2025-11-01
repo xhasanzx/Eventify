@@ -139,7 +139,7 @@ function App() {
             path="/friends"
             element={
               <PlansPage
-                plans={allFriendsPlans}
+                plans={friendsPlans}
                 setPlans={setFriendsPlans}
                 isHost={false}
                 isFriendsPage={true}

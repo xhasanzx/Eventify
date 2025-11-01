@@ -212,7 +212,7 @@ body {
 .plan-card {
   padding: 0.5rem 0 1.5rem 0;
   height: 430px;
-  width: 380px;
+  width: 100%;
   background-color: var(--bg-light);
   border-radius: 12px;
   box-shadow: var(--card-shadow);
@@ -500,6 +500,33 @@ body {
   box-shadow: var(--card-shadow);
   margin: -0.5rem 0 2.5rem 0;
   padding: 2rem 1rem 0 1rem;
+}
+
+.friends-plans-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+.friend-plan-section {
+  border-radius: 12px;
+  background-color: var(--bg-medium);
+  box-shadow: var(--card-shadow);
+  padding: 2rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.friend-plan-title {
+  color: var(--primary-medium);
+  font-size: var(--font-size-xlarge);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(89, 28, 28, 0.5);
+  letter-spacing: 1px;
+  position: relative;
 }
 
 .friends-list {
