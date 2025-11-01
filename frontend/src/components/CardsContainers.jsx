@@ -2,11 +2,7 @@ import React from "react";
 import PlanCard from "./PlanCard";
 import "../style/style.css";
 
-export default function CardsContainers({
-  plans,
-  isHome,  
-  noDataMessage,
-}) {
+export default function CardsContainers({ plans, isHome, noDataMessage }) {
   if (isHome) {
     plans = plans.sort(() => Math.random() - 0.5);
   }
@@ -27,7 +23,7 @@ export default function CardsContainers({
 
       <div className="cards-container">
         {plans?.map((plan) => (
-          <div key={plan.id} className="cards-container-item">
+          <div key={plan.id}>
             <PlanCard plan={plan} />
           </div>
         ))}

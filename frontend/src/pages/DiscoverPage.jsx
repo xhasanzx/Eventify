@@ -42,10 +42,17 @@ export default function DiscoverPage({ friends = [], userId }) {
 
   return (
     <>
-      <div>
-        <p className="discover-page-title">Discover</p>
+      <div className="discover-page-container">
+        <p className="discover-page-title">Coming up</p>
+        <CardsContainers
+          plans={ordered}
+          isHome={false}
+          noDataMessage={"No plans to discover yet."}
+        />
       </div>
-      <div className="row">
+      <div className="discover-page-container">
+        <p className="discover-page-title">Near you</p>
+
         <CardsContainers
           plans={ordered}
           isHome={false}

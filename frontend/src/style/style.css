@@ -204,15 +204,16 @@ body {
   align-items: start;
 }
 
-.cards-container-item {
-  display: flex;
+.discover-page-container .cards-container {
+  grid-template-columns: repeat(3, 380px);
+  justify-content: space-between;
 }
 
 .plan-card {
   padding: 0.5rem 0 1.5rem 0;
-  height: 470px;
-  width: 400px;
-  background-color: var(--bg-medium);
+  height: 430px;
+  width: 380px;
+  background-color: var(--bg-light);
   border-radius: 12px;
   box-shadow: var(--card-shadow);
   display: flex;
@@ -247,6 +248,7 @@ body {
   justify-content: center;
   display: flex;
 }
+
 .meta-row {
   display: flex;
   flex-wrap: wrap;
@@ -255,6 +257,7 @@ body {
   margin-top: 0;
   justify-content: center;
 }
+
 .meta-item {
   fill: var(--primary-medium);
   color: var(--text-medium);
@@ -316,7 +319,7 @@ body {
 }
 
 .plan-card:hover {
-  border: 0.1rem solid var(--primary-dark);  
+  border: 0.05rem solid var(--primary-medium);
 }
 
 .plan-card-title {
@@ -355,7 +358,7 @@ body {
 
 .plan-card-meta svg {
   fill: var(--primary-light);
-  margin-right: 0.5rem;  
+  margin-right: 0.5rem;
   display: flex;
   align-items: center;
   width: 1.5rem;
@@ -485,10 +488,18 @@ body {
 
 .discover-page-title {
   font-size: var(--font-size-xlarge);
-  color: var(--text-light);
+  color: var(--text-medium);
   text-align: center;
   font-weight: 700;
   margin-top: -0.5rem;
+}
+
+.discover-page-container {
+  background-color: var(--bg-medium);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  margin: -0.5rem 0 2.5rem 0;
+  padding: 2rem 1rem 0 1rem;
 }
 
 .friends-list {
