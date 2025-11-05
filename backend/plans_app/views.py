@@ -35,7 +35,6 @@ def create_event(request):
             "error": str(e),
             "serializer error":serializer.errors}, status=400)
 
-
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def get_plan(request, id):    
@@ -50,13 +49,12 @@ def get_plan(request, id):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
 
-
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def delete_Plan(request, id):
+def delete_Plan(request, plan_id):
     try:        
         try:
-            plan = Plan.objects.get(pk=id)            
+            plan = Plan.objects.get(pk=plan_id)            
         except Plan.DoesNotExist:
             return JsonResponse({"message": "plan not found"}, status=404)
         
@@ -70,24 +68,22 @@ def delete_Plan(request, id):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
 
-
 @api_view(['GET'])
 @permission_classes([AllowAny])
-def get_host_plan(request, id):
+def get_host_plan(request, host_id):
     try:        
-        plans = Plan.objects.filter(is_active=True, host=id) 
+        plans = Plan.objects.filter(is_active=True, host=host_id) 
         serializer = PlanSerializer(plans, many=True, context={'request': request})
         return JsonResponse(serializer.data, safe=False, status=200)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
 
-
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def update_plan(request, id):
+def update_plan(request, plan_id):
     try:        
         try:
-            plan = Plan.objects.get(pk=id)            
+            plan = Plan.objects.get(pk=plan_id)
         except Plan.DoesNotExist:
             return JsonResponse({"message": "plan not found"}, status=404)
         
@@ -111,3 +107,28 @@ def update_plan(request, id):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
 
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def attend_plan(request, plan_id):
+    try:
+        user = request.user
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+    
+    try:
+        plan = Plan.objects.get(pk=plan_id)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+    
+    if plan.host == user:
+        return JsonResponse({"error": "host cant attend their own plan"}, status=400)
+    
+    if plan.attendees.filter(id=user.id).exists():
+        plan.attendees.remove(user)
+        plan.save()
+        return JsonResponse({"message": "plan unattended successfully"}, status=200)
+    else:
+        plan.attendees.add(user)
+        plan.save()
+        return JsonResponse({"message": "plan attended successfully"}, status=200)
+    
