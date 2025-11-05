@@ -37,10 +37,10 @@ def create_event(request):
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
-def get_plan(request, id):    
+def get_plan(request, plan_id):    
     try:        
         try:
-            plan = Plan.objects.get(pk=id)            
+            plan = Plan.objects.get(pk=plan_id)            
         except Plan.DoesNotExist:
             return JsonResponse({"message": "plan not found"}, status=404)
         

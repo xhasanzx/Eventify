@@ -6,6 +6,7 @@ import Button from "../components/Button";
 
 export default function PlanDetailsPage() {
   const { id } = useParams();
+  const userId = useParams().userId; // from App.jsx
   const [event, setEvent] = useState(null);
   const [events, setEvents] = useState([]);
   const [attendees, setAttendees] = useState([]);
@@ -17,19 +18,29 @@ export default function PlanDetailsPage() {
   useEffect(() => {
     API.get(`/plan/${id}`).then((res) => {
       setEvent(res.data);
+      setAttendeesNumber(res.data.attendees.length);
+      setAttendees(res.data.attendees);
+      setIsAttending(
+        res.data.attendees.some((attendee) => attendee.id === userId)
+      );
     });
   }, [id]);
 
   const handleAttend = () => {
-    setIsAttending(!isAttending);
-    if (isAttending) {
-      setAttendeesNumber(attendeesNumber - 1);
-    } else {
-      setAttendeesNumber(attendeesNumber + 1);
-    }
+    API.post(`/plan/attend/${id}/`).then((res) => {
+      if (res.status === 200) {
+        if (isAttending) {
+          setIsAttending(!isAttending);
+          setAttendeesNumber(attendeesNumber - 1);
+        } else if (!isAttending) {
+          setIsAttending(!isAttending);
+          setAttendeesNumber(attendeesNumber + 1);
+        }
+      } else if (res.status === 400) {
+        alert("Failed to attend plan. Please try again.");
+      }
+    });
   };
-
-  console.log(event);
   return (
     <div className="row plan-details-container">
       <div className="col-12">

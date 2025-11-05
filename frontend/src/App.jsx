@@ -150,7 +150,7 @@ function App() {
             path="/discover"
             element={<DiscoverPage friends={friends} userId={userId} />}
           />
-          <Route path="/plan/:id" element={<PlanDetailsPage />} />
+          <Route path="/plan/:id" element={<PlanDetailsPage userId={userId} />} />
           <Route path="/plan/:id/edit" element={<EditPlanPage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route
