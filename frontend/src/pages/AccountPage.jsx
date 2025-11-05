@@ -90,7 +90,9 @@ export default function AccountPage() {
       <div className="account-page row">
         <div className="account-header col-12">
           <div className="account-header-title-container">
-            <div className="avatar-circle">{username?.[0]?.toUpperCase()}</div>
+            <div className="avatar-circle">
+              <p>{username?.[0]?.toUpperCase()}</p>
+            </div>
             <p className="account-header-title">
               {username
                 ? username[0].toUpperCase() + username.slice(1)

@@ -278,23 +278,25 @@ body {
   width: 6rem;
   height: 6rem;
   border-radius: 100%;
-  background: var(--bg-medium);
+  background: var(--bg-light);
   box-shadow: var(--card-shadow);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto;
-  padding: 0.5rem;
-  -webkit-text-stroke: 1px var(--bg-light);
-  color: var(--primary-light);
-  font-weight: 800;
-  font-size: 4.5rem;
-  text-shadow: 2px 5px 4px var(--bg-dark);
+  border: 0.1rem solid var(--primary-medium);
+  position: relative;
 }
 
 .avatar-circle p {
-  margin: 0;
-  padding: 0;
+  color: var(--primary-light);
+  -webkit-text-stroke: 0.1rem var(--bg-light);
+  text-shadow: 2px 2px 4px var(--bg-dark);
+  font-size: 4rem;
+  font-weight: 800;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-51%, -53%);
 }
 
 .user-page-text-container {
