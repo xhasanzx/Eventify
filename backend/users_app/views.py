@@ -68,6 +68,27 @@ def signup_view(request):
             'error': 'IntegrityError: ' + str(e),
         }, status=status.HTTP_400_BAD_REQUEST)        
 
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def change_password(request):
+    user = request.user
+    data = request.data
+    old_password = data.get('oldPassword')
+    new_password = data.get('newPassword')
+
+    
+    if not user.check_password(old_password):
+        return JsonResponse({
+            "error": "old password is incorrect"
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    user.set_password(new_password)
+    user.save()
+
+    return JsonResponse({
+        "message": "password changed successfully"
+    }, status=status.HTTP_200_OK)
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def view_account(request):
@@ -99,14 +120,9 @@ def view_user_account(request, id):
 
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
-def update_account(request, id):
-    if request.user.id != id:
-        return JsonResponse({
-            "error": "you can only update your own account"
-        }, status=status.HTTP_403_FORBIDDEN)
-    
+def update_account(request):
     try:
-        user = User.objects.get(id=id)
+        user = request.user
     except User.DoesNotExist:
         return JsonResponse({
             "error": "user not found"
@@ -114,13 +130,10 @@ def update_account(request, id):
 
     data = request.data
     username = data.get('username', user.username)
-    email = data.get('email', user.email)
-    password = data.get('password', None)
+    email = data.get('email', user.email)    
 
     user.username = username
-    user.email = email
-    if password:
-        user.set_password(password)
+    user.email = email    
     
     try:
         user.save()
@@ -305,23 +318,3 @@ def reject_friend_request(request, from_user_id):
     return JsonResponse({
             "message": "friend request rejected"
         }, status=status.HTTP_200_OK) 
-
-@api_view(["PUT"])
-@permission_classes([IsAuthenticated])
-def change_password(request):
-    user = request.user
-    data = request.data
-    old_password = data.get('oldPassword')
-    new_password = data.get('newPassword')
-
-    if not user.check_password(old_password):
-        return JsonResponse({
-            "error": "old password is incorrect"
-        }, status=status.HTTP_400_BAD_REQUEST)
-
-    user.set_password(new_password)
-    user.save()
-
-    return JsonResponse({
-        "message": "password changed successfully"
-    }, status=status.HTTP_200_OK)

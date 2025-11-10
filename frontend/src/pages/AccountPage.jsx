@@ -1,4 +1,3 @@
-// Removed unused SVG import
 import Logout from "../components/Logout";
 import EditAccountForm from "../components/EditAccountForm";
 import API from "../api";

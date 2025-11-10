@@ -3,12 +3,12 @@ import { useState, useEffect } from "react";
 import "../style/style.css";
 
 export default function EditAccountForm() {
-  const [id, setId] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
+  const [oldPassword, setOldPassword] = useState("")
+  const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState("");
+  const [msg, setMsg] = useState("");
 
   if (error) {
     setTimeout(() => {
@@ -16,25 +16,44 @@ export default function EditAccountForm() {
     }, 3500);
   }
 
-  const handleSubmit = (e) => {
+  if (msg) {
+    setTimeout(() => {
+      setMsg("");
+    }, 3500);
+  }
+
+  const handlePasswordChange = (e) => {
     e.preventDefault();
 
-    // if (password !== password2) {
-    //   setError("Passwords do not match.");
-    //   return;
-    // }
-    // if (password.length < 3) {
-    //   setError("Password must be at least 3 characters.");
-    //   return;
-    // }
-
-    API.put(`user/update/${id}/`, { username, email })
+    if (newPassword.length < 4) {
+      setError("Password must be at least 4 characters.");
+      return;
+    }
+    API.put('user/change-password/', { oldPassword, newPassword })
       .then((res) => {
+        setMsg("Password changed successfully.");
+        console.log(res);
+        setOldPassword("");
+        setNewPassword("");
+      })
+      .catch((err) => {
+        setError("Error changing password.");
+        console.log(err);
+      });
+  }
+
+  const handleUpdateProfile = (e) => {
+    e.preventDefault();
+
+    API.put('user/update/', { username, email })
+      .then((res) => {
+        setMsg("Profile updated successfully.");
         console.log(res);
         setUsername(res.data.user.username);
         setEmail(res.data.user.email);
       })
       .catch((err) => {
+        setError("Error updating profile.");
         console.log(err);
       });
   };
@@ -44,9 +63,7 @@ export default function EditAccountForm() {
       const accountRes = await API.get("user/account/");
       setUsername(accountRes.data.user.username);
       setEmail(accountRes.data.user.email);
-      setPassword(accountRes.data.user.password);
-      setId(accountRes.data.user.id);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -58,6 +75,11 @@ export default function EditAccountForm() {
       {error && (
         <div className="alert alert-danger py-2" role="alert">
           {error}
+        </div>
+      )}
+      {msg && (
+        <div className="alert alert-success py-2" role="alert">
+          {msg}
         </div>
       )}
       <p className="account-container-title">Account Details</p>
@@ -85,26 +107,38 @@ export default function EditAccountForm() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
+          <div
+            className="col-12 mb-3"
+            style={{
+              marginTop: "1rem",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <button className="button-primary" onClick={handleUpdateProfile}>
+              Update Profile
+            </button>
+          </div>
           <div className="mb-3 col-6 ">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="oldPassword">Old Password</label>
             <input
               type="password"
               className="form-control"
-              id="password"
-              value={""}
+              id="oldPassword"
+              value={oldPassword}
               autoComplete="password"
-              // onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setOldPassword(e.target.value)}
             />
           </div>
           <div className="mb-3 col-6">
-            <label htmlFor="password2">Confirm Password</label>
+            <label htmlFor="newPassword">New Password</label>
             <input
               type="password"
               className="form-control"
-              id="password2"
-              value={""}
+              id="newPassword"
+              value={newPassword}
               autoComplete="password"
-              // onChange={(e) => setPassword2(e.target.value)}
+              onChange={(e) => setNewPassword(e.target.value)}
             />
           </div>
         </div>
@@ -117,8 +151,8 @@ export default function EditAccountForm() {
             justifyContent: "center",
           }}
         >
-          <button className="button-primary" onClick={handleSubmit}>
-            Save
+          <button className="button-primary" onClick={handlePasswordChange}>
+            Change Password
           </button>
         </div>
       </form>
