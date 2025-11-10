@@ -20,7 +20,6 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
     }
 
-
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
@@ -41,7 +40,6 @@ def login_view(request):
         return Response({
             'error': 'invalid credentials.'
         }, status=status.HTTP_401_UNAUTHORIZED)
-
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -70,7 +68,6 @@ def signup_view(request):
             'error': 'IntegrityError: ' + str(e),
         }, status=status.HTTP_400_BAD_REQUEST)        
 
-
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def view_account(request):
@@ -84,7 +81,6 @@ def view_account(request):
         return JsonResponse({
             "error": "user not found"
         }, status=status.HTTP_404_NOT_FOUND)
-
 
 @api_view(["GET"])
 @permission_classes([AllowAny])
@@ -100,7 +96,6 @@ def view_user_account(request, id):
         return JsonResponse({
             "error": "user not found"
         }, status=status.HTTP_404_NOT_FOUND)
-
 
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
@@ -139,7 +134,6 @@ def update_account(request, id):
             'error': 'IntegrityError: ' + str(e),
         }, status=status.HTTP_400_BAD_REQUEST)
 
-
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_user_plans(request):
@@ -156,7 +150,6 @@ def get_user_plans(request):
             "username": user.username.capitalize(),
             "plans": serializer.data
         }, status=status.HTTP_200_OK)
-
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -175,7 +168,6 @@ def get_user_friends(request):
         return JsonResponse({
             "friends": serializer.data
         }, status=status.HTTP_200_OK)
-
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -214,7 +206,6 @@ def get_friend_requests(request):
         ]
     }, status=status.HTTP_200_OK)
 
-
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def send_friend_request(request, to_user_id):        
@@ -230,7 +221,6 @@ def send_friend_request(request, to_user_id):
     serializer = FriendRequestSerializer(friend_request)
     return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
 
-
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def cancel_friend_request(request, to_user_id):    
@@ -245,7 +235,6 @@ def cancel_friend_request(request, to_user_id):
     return JsonResponse({
         "message": "friend request cancelled"
     }, status=status.HTTP_200_OK)
-
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
@@ -271,7 +260,6 @@ def unfriend_user(request, friend_id):
         return JsonResponse({
             "error": str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
@@ -301,7 +289,6 @@ def accept_friend_request(request, from_user_id):
                 'error': str(e)
             }, status=status.HTTP_400_BAD_REQUEST)
 
-
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def reject_friend_request(request, from_user_id):    
@@ -318,3 +305,23 @@ def reject_friend_request(request, from_user_id):
     return JsonResponse({
             "message": "friend request rejected"
         }, status=status.HTTP_200_OK) 
+
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def change_password(request):
+    user = request.user
+    data = request.data
+    old_password = data.get('oldPassword')
+    new_password = data.get('newPassword')
+
+    if not user.check_password(old_password):
+        return JsonResponse({
+            "error": "old password is incorrect"
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    user.set_password(new_password)
+    user.save()
+
+    return JsonResponse({
+        "message": "password changed successfully"
+    }, status=status.HTTP_200_OK)

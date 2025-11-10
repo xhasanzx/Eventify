@@ -3,12 +3,14 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import (login_view, signup_view, view_account, view_user_account,
                     get_user_plans, get_user_friends, get_friend_requests,
                     unfriend_user, send_friend_request, cancel_friend_request,
-                    accept_friend_request, reject_friend_request, update_account)
+                    accept_friend_request, reject_friend_request, update_account,
+                    change_password)
 
 # /user/...
 urlpatterns = [    
     path('login/', login_view, name='login'),    
     path('signup/', signup_view, name='signup'),
+    path('change-password/', change_password, name='change_password'),
 
     path('account/', view_account, name='view_account'),
     path('account/<int:id>/', view_user_account, name='update_account'),
