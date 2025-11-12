@@ -14,6 +14,7 @@ export default function UserPage({ userId, setFriends }) {
   });
   const [isFriend, setIsFriend] = useState(false);
   const [pendingRequest, setPendingRequest] = useState(false);
+  const [pendingAccept, setPendingAccept] = useState(false);
   const params = useParams();
   const id = params.id;
 
@@ -40,7 +41,13 @@ export default function UserPage({ userId, setFriends }) {
   };
 
   const handleFreindRequest = async () => {
-    if (user.pendingRequest === true) {
+    if (pendingAccept) {
+      await API.post(`user/accept-friend-request/${id}/`).then((res) => {
+        console.log(res.data);
+        setPendingAccept(false);
+        setIsFriend(true);
+      });
+    } else if (pendingRequest) {
       setPendingRequest(false);
       setIsFriend(false);
 
@@ -70,17 +77,15 @@ export default function UserPage({ userId, setFriends }) {
       try {
         setIsLoading(true);
         await API.get(`user/account/${id}/`).then((res) => {
+          const userData = res.data.user;
           setUser((prev) => ({
             ...prev,
             username:
-              res.data.user.username[0].toUpperCase() +
-              res.data.user.username.slice(1),
-            friends: res.data.user.friends,
+              userData.username[0].toUpperCase() + userData.username.slice(1),
+            friends: userData.friends,
           }));
-          setFriendsNumber(res.data.user.friends.length);
-          setIsFriend(
-            res.data.user.friends.some((friendId) => friendId == userId)
-          );
+          setFriendsNumber(userData.friends.length);
+          setIsFriend(userData.friends.some((friendId) => friendId == userId));
         });
 
         await API.get(`plan/host/${id}/`).then((res) => {
@@ -92,9 +97,16 @@ export default function UserPage({ userId, setFriends }) {
         }
 
         await API.get(`user/friend-requests/`).then((res) => {
-          if (
-            res.data.sent_requests.some((request) => request.to_user_id == id)
-          ) {
+          const receivedRequests = res.data.received_requests;
+          const sentRequests = res.data.sent_requests;
+
+          if (receivedRequests.some((request) => request.from_user_id == id)) {
+            setPendingAccept(true);
+            console.log("Pending accept");
+          } else {
+            setPendingAccept(false);
+          }
+          if (sentRequests.some((request) => request.to_user_id == id)) {
             setPendingRequest(true);
           } else {
             setPendingRequest(false);
@@ -114,12 +126,21 @@ export default function UserPage({ userId, setFriends }) {
   return (
     <>
       {isLoading ? (
-        <p className="header text-center">Loading...</p>
+        <p
+          className="header text-center"
+          style={{
+            color: "var(--text-medium)",
+            fontSize: "var(--font-size-xlarge)",
+            fontWeight: "800",
+          }}
+        >
+          Loading...
+        </p>
       ) : (
         <>
-          <div className="avatar-circle">
+          {/* <div className="avatar-circle">
             <p>{user.username?.[0]?.toUpperCase()}</p>
-          </div>
+          </div> */}
           <div className="user-page-container">
             <div className="user-page-text-container">
               <p
@@ -159,6 +180,10 @@ export default function UserPage({ userId, setFriends }) {
               >
                 Request Sent
               </button>
+            ) : pendingAccept ? (
+              <button className="button-primary" onClick={handleFreindRequest}>
+                Accept Request
+              </button>
             ) : (
               <button className="button-primary" onClick={handleFreindRequest}>
                 Add friend
@@ -167,9 +192,9 @@ export default function UserPage({ userId, setFriends }) {
           </div>
 
           <div>
-            <CardsContainers             
+            <CardsContainers
               plans={user.plans ? user.plans : []}
-              isHome={false}              
+              isHome={false}
               noDataMessage={`${user.username} has no plans yet.`}
             />
           </div>
